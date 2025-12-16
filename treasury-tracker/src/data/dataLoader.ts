@@ -4,7 +4,7 @@
  * Handles loading budget data from either processed JSON or fallback mock data
  */
 
-import type { BudgetCategory, BudgetData } from '../types/budget';
+import type { BudgetData } from '../types/budget';
 
 let cachedData: BudgetData | null = null;
 
@@ -12,8 +12,6 @@ let cachedData: BudgetData | null = null;
  * Load budget data from processed JSON file for a specific year
  */
 export async function loadBudgetData(year: number = 2025): Promise<BudgetData> {
-  const cacheKey = `budget-${year}`;
-  
   // Check cache first
   if (cachedData && cachedData.metadata.fiscalYear === year) {
     return cachedData;
