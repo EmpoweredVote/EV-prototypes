@@ -19,7 +19,8 @@ export async function loadBudgetData(year: number = 2025): Promise<BudgetData> {
 
   try {
     // Try to load processed data for the specified year
-    const response = await fetch(`/data/budget-${year}.json`);
+    // Use relative path that works with the base path
+    const response = await fetch(`./data/budget-${year}.json`);
     
     if (!response.ok) {
       throw new Error(`Failed to load budget data for year ${year}: ${response.status}`);
