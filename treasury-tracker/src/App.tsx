@@ -15,11 +15,6 @@ interface PathItem {
   parent?: BudgetCategory;
 }
 
-interface SelectedCategoryInfo {
-  category: BudgetCategory;
-  depth: number;
-}
-
 interface SelectionPath {
   [depth: number]: BudgetCategory;
 }
