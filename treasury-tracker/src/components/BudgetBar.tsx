@@ -75,7 +75,8 @@ const BudgetBar: React.FC<BudgetBarProps> = ({ categories, onCategoryClick, sele
               {category.percentage >= 8 && (
                 <div className="segment-label" aria-hidden="true">
                   <div className="segment-name">{category.name}</div>
-                  <div className="segment-percentage">{formatPercentage(category.percentage)}%</div>
+                  <div className="segment-amount">{formatCurrency(category.amount)}</div>
+                  <div className="segment-percentage"> ({formatPercentage(category.percentage)}%)</div>
                 </div>
               )}
             </div>
