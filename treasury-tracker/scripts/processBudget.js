@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { SmartColorAssigner } from './colorUtils.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,7 +16,7 @@ const __dirname = path.dirname(__filename);
 class BudgetProcessor {
   constructor(config) {
     this.config = config;
-    this.colorIndex = 0;
+    this.colorAssigner = null;
   }
 
   /**
@@ -73,12 +74,13 @@ class BudgetProcessor {
   }
 
   /**
-   * Get the next color from the palette
+   * Get the next color using smart distribution
    */
   getNextColor() {
-    const color = this.config.colorPalette[this.colorIndex % this.config.colorPalette.length];
-    this.colorIndex++;
-    return color;
+    if (!this.colorAssigner) {
+      this.colorAssigner = new SmartColorAssigner(this.config.colorPalette);
+    }
+    return this.colorAssigner.getNextColor();
   }
 
   /**
@@ -122,6 +124,8 @@ class BudgetProcessor {
   treeToArray(tree, depth) {
     const result = [];
     const isLowestLevel = depth === this.config.hierarchy.length - 1;
+    
+    // DON'T reset color assigner for subcategories - we want continuous color distribution
     
     for (const [name, node] of Object.entries(tree)) {
       const amount = this.calculateTotal(node.items);
@@ -204,8 +208,8 @@ class BudgetProcessor {
    * Process a single fiscal year
    */
   processYear(rawData, year) {
-    // Reset color index for each year
-    this.colorIndex = 0;
+    // Reset color assigner for each year
+    this.colorAssigner = new SmartColorAssigner(this.config.colorPalette);
     
     console.log(`\n📅 Processing FY${year}...`);
     
@@ -305,8 +309,21 @@ class BudgetProcessor {
 
 // Main execution
 try {
-  const configPath = path.join(__dirname, '..', 'budgetConfig.json');
+  // Try new config first, fall back to old config
+  let configPath = path.join(__dirname, '..', 'treasuryConfig.json');
+  if (!fs.existsSync(configPath)) {
+    configPath = path.join(__dirname, '..', 'budgetConfig.json');
+  }
   const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+  
+  // Adapt config structure if using new format
+  if (config.datasets && config.datasets.operating) {
+    config.inputFile = config.datasets.operating.inputFile;
+    config.outputFile = config.datasets.operating.outputFile;
+    config.amountColumn = config.datasets.operating.amountColumn;
+    config.hierarchy = config.datasets.operating.hierarchy;
+    config.colorPalette = config.datasets.operating.colorPalette;
+  }
   
   const processor = new BudgetProcessor(config);
   processor.processAll();

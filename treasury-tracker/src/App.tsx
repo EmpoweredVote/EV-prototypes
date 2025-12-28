@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import { ArrowLeft } from 'lucide-react';
+import DatasetTabs from './components/datasets/DatasetTabs';
 import NavigationTabs from './components/NavigationTabs';
 import SearchBar from './components/SearchBar';
 import YearSelector from './components/YearSelector';
@@ -7,8 +8,8 @@ import Breadcrumb from './components/Breadcrumb';
 import BudgetBar from './components/BudgetBar';
 import CategoryList from './components/CategoryList';
 import LineItemsTable from './components/LineItemsTable';
+import TransactionLineItemsTable from './components/TransactionLineItemsTable';
 import type { BudgetCategory, BudgetData } from './types/budget';
-import { loadBudgetData } from './data/dataLoader';
 import './App.css'
 
 interface BreadcrumbItem {
@@ -16,28 +17,112 @@ interface BreadcrumbItem {
   onClick?: () => void;
 }
 
+type DatasetType = 'revenue' | 'operating' | 'salaries' | 'transactions';
+
+// Helper function to load any dataset
+async function loadDataset(type: DatasetType, year: number): Promise<BudgetData> {
+  const fileMap = {
+    revenue: 'revenue',
+    operating: 'budget',
+    salaries: 'salaries',
+    transactions: 'transactions'
+  };
+  
+  const fileName = fileMap[type];
+  // Use relative path that works with Vite's public directory
+  const response = await fetch(`./data/${fileName}-${year}.json`);
+  
+  if (!response.ok) {
+    throw new Error(`Failed to load ${type} data for ${year}`);
+  }
+  
+  return response.json();
+}
+
+// Get display text for each dataset
+function getDatasetDisplayText(type: DatasetType) {
+  const texts = {
+    revenue: {
+      title: 'funds its budget',
+      description: 'Each segment shows where city revenue comes from. Tap any source to explore its breakdown.',
+      lineItemsDescription: 'Detailed revenue sources showing approved and actual amounts received.'
+    },
+    operating: {
+      title: 'spends its budget',
+      description: 'Each segment shows the share of the total budget. Tap any category to explore its breakdown.',
+      lineItemsDescription: 'Detailed line items showing individual expenditures and actual amounts spent.'
+    },
+    salaries: {
+      title: 'compensates its workforce',
+      description: 'Each segment shows department payroll. Tap any department to see position breakdowns.',
+      lineItemsDescription: 'Detailed compensation showing base pay, benefits, overtime, and other pay.'
+    },
+    transactions: {
+      title: 'purchases goods and services',
+      description: 'Each segment shows spending by department. Tap to see recent transactions and vendors.',
+      lineItemsDescription: 'Recent transactions showing vendors, amounts, dates, and descriptions.'
+    }
+  };
+  
+  return texts[type];
+}
+
+// Get dataset label for breadcrumbs
+function getDatasetLabel(type: DatasetType): string {
+  const labels = {
+    revenue: 'Revenue',
+    operating: 'Budget',
+    salaries: 'Salaries',
+    transactions: 'Transactions'
+  };
+  return labels[type];
+}
+
 function App() {
+  // Dataset selection
+  const [activeDataset, setActiveDataset] = useState<DatasetType>('operating');
+  
+  // Existing state
   const [activeTab, setActiveTab] = useState('city');
   const [selectedYear, setSelectedYear] = useState('2025');
   const [searchQuery, setSearchQuery] = useState('');
   const [budgetData, setBudgetData] = useState<BudgetData | null>(null);
+  const [operatingBudgetData, setOperatingBudgetData] = useState<BudgetData | null>(null);
+  const [revenueData, setRevenueData] = useState<BudgetData | null>(null);
   const [loading, setLoading] = useState(true);
   const [navigationPath, setNavigationPath] = useState<BudgetCategory[]>([]);
 
-  // Load budget data on mount and when year changes
+  // Load operating budget and revenue data for static info card and totals
+  useEffect(() => {
+    Promise.all([
+      loadDataset('operating', parseInt(selectedYear)),
+      loadDataset('revenue', parseInt(selectedYear))
+    ])
+      .then(([operating, revenue]) => {
+        setOperatingBudgetData(operating);
+        setRevenueData(revenue);
+      })
+      .catch(error => {
+        console.error('Failed to load dataset totals:', error);
+      });
+  }, [selectedYear]);
+
+  // Load data when dataset or year changes
   useEffect(() => {
     setLoading(true);
-    loadBudgetData(parseInt(selectedYear))
+    setNavigationPath([]); // Reset navigation
+    setSearchQuery(''); // Reset search
+    
+    loadDataset(activeDataset, parseInt(selectedYear))
       .then(data => {
         setBudgetData(data);
-        setNavigationPath([]); // Reset navigation when changing years
         setLoading(false);
       })
       .catch(error => {
-        console.error('Failed to load budget data:', error);
+        console.error(`Failed to load ${activeDataset} data:`, error);
         setLoading(false);
       });
-  }, [selectedYear]);
+  }, [activeDataset, selectedYear]);
 
   const tabs = [
     { id: 'city', label: 'City' },
@@ -62,8 +147,13 @@ function App() {
   }, [navigationPath]);
 
   const handleBreadcrumbClick = useCallback((index: number) => {
-    // index 0 = back to overview
-    setNavigationPath(navigationPath.slice(0, index));
+    // index 0 = City, index 1 = Dataset, index 2+ = categories
+    // Clicking dataset should go back to overview
+    if (index === 1) {
+      setNavigationPath([]);
+    } else if (index > 1) {
+      setNavigationPath(navigationPath.slice(0, index - 1));
+    }
   }, [navigationPath]);
 
   const formatCurrency = useCallback((amount: number) => {
@@ -79,7 +169,11 @@ function App() {
     const items: BreadcrumbItem[] = [
       { 
         label: 'City', 
-        onClick: navigationPath.length > 0 ? () => handleBreadcrumbClick(0) : undefined 
+        onClick: navigationPath.length > 0 ? () => setNavigationPath([]) : undefined 
+      },
+      {
+        label: getDatasetLabel(activeDataset),
+        onClick: navigationPath.length > 0 ? () => handleBreadcrumbClick(1) : undefined
       }
     ];
     
@@ -87,26 +181,28 @@ function App() {
       items.push({
         label: category.name,
         onClick: index < navigationPath.length - 1 
-          ? () => handleBreadcrumbClick(index + 1)
+          ? () => handleBreadcrumbClick(index + 2)
           : undefined // Current selection, not clickable
       });
     });
     
     return items;
-  }, [navigationPath, handleBreadcrumbClick]);
+  }, [navigationPath, activeDataset, handleBreadcrumbClick]);
 
-  const formatPerResident = (total: number) => {
-    if (!budgetData) return '$0';
-    const perResident = total / budgetData.metadata.population;
+  const formatPerResident = (total: number, population: number) => {
+    const perResident = total / population;
     return `${perResident.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
   };
 
+  // Get display text based on active dataset
+  const displayText = getDatasetDisplayText(activeDataset);
+
   // Show loading state
-  if (loading) {
+  if (loading || !operatingBudgetData) {
     return (
       <div className="app">
         <div className="main-content" style={{ padding: '4rem', textAlign: 'center' }}>
-          <h2>Loading budget data...</h2>
+          <h2>Loading data...</h2>
         </div>
       </div>
     );
@@ -117,7 +213,7 @@ function App() {
     return (
       <div className="app">
         <div className="main-content" style={{ padding: '4rem', textAlign: 'center' }}>
-          <h2>Unable to load budget data</h2>
+          <h2>Unable to load data</h2>
           <p>Please check the console for errors.</p>
         </div>
       </div>
@@ -125,7 +221,6 @@ function App() {
   }
 
   // Determine what to display
-  // If we're at a category with line items but no subcategories, show line items
   const currentCategory = navigationPath.length > 0 ? navigationPath[navigationPath.length - 1] : null;
   const showLineItems = currentCategory && 
                         currentCategory.lineItems && 
@@ -154,64 +249,79 @@ function App() {
     <div className="app">
       <div className="header">
         <div className="header-content">
-          <NavigationTabs 
-            tabs={tabs} 
-            activeTab={activeTab} 
-            onTabChange={setActiveTab} 
-          />
-          <div className="search-year-container">
-            <SearchBar 
-              value={searchQuery} 
-              onChange={setSearchQuery} 
+          {/* City/State/Federal tabs and controls */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <NavigationTabs 
+              tabs={tabs} 
+              activeTab={activeTab} 
+              onTabChange={setActiveTab} 
             />
-            <YearSelector 
-              selectedYear={selectedYear}
-              years={years}
-              onYearChange={setSelectedYear}
-            />
+            <div className="search-year-container">
+              <SearchBar 
+                value={searchQuery} 
+                onChange={setSearchQuery} 
+              />
+              <YearSelector 
+                selectedYear={selectedYear}
+                years={years}
+                onYearChange={setSelectedYear}
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      {breadcrumbItems.length > 1 && <Breadcrumb items={breadcrumbItems} />}
+      {breadcrumbItems.length > 2 && <Breadcrumb items={breadcrumbItems} />}
 
       <div className="main-content">
-        {/* Hero Section - Only show at top level */}
+        {/* Hero Section - Static, only show at top level */}
         {navigationPath.length === 0 && (
-          <div className="hero-and-cards-row">
-            <div className="hero-section" style={{
-              backgroundImage: "url('https://upload.wikimedia.org/wikipedia/commons/8/85/Monroe_County_Courthouse_in_Bloomington_from_west-southwest.jpg')",
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat'
-            }}>
-              <div className="hero-overlay" style={{
-                background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 100%)'
-              }}></div>
-              <div className="hero-content">
-                <h1>{budgetData.metadata.cityName} City Budget</h1>
-                <p>Explore how public funds are allocated and spent.</p>
-              </div>
-            </div>
-
-            <div className="info-cards">
-              <div className="info-card">
-                <div className="info-card-left">
-                  <h3>Total {budgetData.metadata.fiscalYear} Budget</h3>
-                  <div className="amount">{formatCurrency(budgetData.metadata.totalBudget)}</div>
+          <>
+            <div className="hero-and-cards-row">
+              <div className="hero-section" style={{
+                backgroundImage: "url('https://upload.wikimedia.org/wikipedia/commons/8/85/Monroe_County_Courthouse_in_Bloomington_from_west-southwest.jpg')",
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+              }}>
+                <div className="hero-overlay" style={{
+                  background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 100%)'
+                }}></div>
+                <div className="hero-content">
+                  <h1>Bloomington, Indiana Finances</h1>
+                  <p>Explore how public funds are allocated and spent.</p>
                 </div>
-                <div className="info-card-divider"></div>
-                <div className="info-card-right">
-                  <h3>City Context</h3>
-                  <div className="description">
-                    Population ~{budgetData.metadata.population.toLocaleString()} residents
-                    <br />
-                    ${formatPerResident(budgetData.metadata.totalBudget)} per resident annually
+              </div>
+
+              <div className="info-cards">
+                <div className="info-card">
+                  <div className="info-card-left">
+                    <h3>Total {operatingBudgetData.metadata.fiscalYear} Budget</h3>
+                    <div className="amount">{formatCurrency(operatingBudgetData.metadata.totalBudget)}</div>
+                  </div>
+                  <div className="info-card-divider"></div>
+                  <div className="info-card-right">
+                    <h3>City Context</h3>
+                    <div className="description">
+                      Population ~{operatingBudgetData.metadata.population.toLocaleString()} residents
+                      <br />
+                      ${formatPerResident(operatingBudgetData.metadata.totalBudget, operatingBudgetData.metadata.population)} per resident annually
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+
+            {/* Dataset Tabs - NEW LOCATION */}
+            <div style={{ marginTop: '2rem', marginBottom: '2rem' }}>
+              <DatasetTabs 
+                activeDataset={activeDataset}
+                onDatasetChange={(id) => setActiveDataset(id as DatasetType)}
+                revenueTotal={revenueData?.metadata.totalBudget}
+                operatingTotal={operatingBudgetData?.metadata.totalBudget}
+              />
+            </div>
+          </>
         )}
 
         {/* Back button when navigated into categories */}
@@ -266,7 +376,7 @@ function App() {
           <div className="section-header">
             <h2>
               {navigationPath.length === 0 
-                ? `How ${budgetData.metadata.cityName} spends its budget` 
+                ? `How ${budgetData.metadata.cityName} ${displayText.title}` 
                 : navigationPath[navigationPath.length - 1].name}
             </h2>
             {navigationPath.length > 1 && (
@@ -279,18 +389,25 @@ function App() {
           </div>
           <p className="section-description">
             {navigationPath.length === 0 
-              ? 'Each segment shows the share of the total budget. Tap any category below to explore its breakdown.'
+              ? displayText.description
               : showLineItems
-                ? 'Detailed line items showing individual expenditures and actual amounts spent.'
+                ? displayText.lineItemsDescription
                 : 'The colored backgrounds show each subcategory\'s relative size. Tap to explore further or use the back button to return.'}
           </p>
           
           {showLineItems ? (
             // Show line items table at the lowest level
-            <LineItemsTable 
-              lineItems={currentCategory!.lineItems!}
-              categoryName={currentCategory!.name}
-            />
+            activeDataset === 'transactions' ? (
+              <TransactionLineItemsTable 
+                lineItems={currentCategory!.lineItems!}
+                categoryName={currentCategory!.name}
+              />
+            ) : (
+              <LineItemsTable 
+                lineItems={currentCategory!.lineItems!}
+                categoryName={currentCategory!.name}
+              />
+            )
           ) : displayCategories.length > 0 ? (
             <>
               {/* Visual budget bar (non-interactive) */}
@@ -319,7 +436,7 @@ function App() {
             fontSize: '0.875rem',
             color: 'var(--text-gray)'
           }}>
-            <strong>💡 Tip:</strong> Tap any category to drill down into its budget breakdown. Use breadcrumbs or the back button to navigate back.
+            <strong>💡 Tip:</strong> Tap any category to drill down into its breakdown. Use breadcrumbs or the back button to navigate back. Switch datasets using the tabs above to explore revenue, salaries, and transactions.
           </div>
         )}
       </div>
