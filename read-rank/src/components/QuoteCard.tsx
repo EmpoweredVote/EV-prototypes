@@ -99,6 +99,7 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({
         ${isDraggable && !isAnimating ? 'cursor-grab active:cursor-grabbing' : 'cursor-default'}
         shadow-lg select-none touch-none
         ${isAnimating ? 'pointer-events-none' : ''}
+        ${isDragging ? 'ev-quote-card-dragging' : ''}
       `}
       whileHover={isDraggable && !isAnimating && !isDragging ? { scale: 1.02 } : {}}
       transition={{ duration: 0.2 }}

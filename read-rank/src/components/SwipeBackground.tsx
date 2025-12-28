@@ -18,54 +18,41 @@ export const SwipeBackground: React.FC<SwipeBackgroundProps> = ({ dragX, isDragg
 
   return (
     <div
-      className="swipe-background-container"
+      className="swipe-background-wrapper"
       style={{ opacity: baseOpacity }}
     >
-      {/* Disagree (Left) Zone */}
+      {/* Peek indicators - above card */}
       <motion.div
-        className="swipe-zone swipe-zone-disagree"
+        className="swipe-peek swipe-peek-top-left"
         style={{ opacity: disagreeIntensity }}
       >
-        <div className="swipe-zone-content">
-          <svg
-            className="swipe-zone-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2.5}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-          <span className="swipe-zone-label">DISAGREE</span>
-        </div>
+        <svg className="swipe-peek-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        <span className="swipe-peek-label">DISAGREE</span>
       </motion.div>
 
-      {/* Agree (Right) Zone */}
       <motion.div
-        className="swipe-zone swipe-zone-agree"
+        className="swipe-peek swipe-peek-top-right"
         style={{ opacity: agreeIntensity }}
       >
-        <div className="swipe-zone-content">
-          <svg
-            className="swipe-zone-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2.5}
-              d="M5 13l4 4L19 7"
-            />
-          </svg>
-          <span className="swipe-zone-label">AGREE</span>
-        </div>
+        <span className="swipe-peek-label">AGREE</span>
+        <svg className="swipe-peek-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+        </svg>
       </motion.div>
+
+      {/* Background split zones */}
+      <div className="swipe-background-container">
+        <motion.div
+          className="swipe-zone swipe-zone-disagree"
+          style={{ opacity: disagreeIntensity }}
+        />
+        <motion.div
+          className="swipe-zone swipe-zone-agree"
+          style={{ opacity: agreeIntensity }}
+        />
+      </div>
     </div>
   );
 };
