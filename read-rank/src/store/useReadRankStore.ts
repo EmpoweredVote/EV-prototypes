@@ -6,6 +6,8 @@ export interface Quote {
   text: string;
   candidateId?: string;
   issue: string;
+  sourceUrl?: string;
+  sourceName?: string;
 }
 
 export interface RankedQuote extends Quote {

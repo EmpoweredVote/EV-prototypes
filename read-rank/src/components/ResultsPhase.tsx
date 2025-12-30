@@ -149,6 +149,20 @@ const QuoteResultCard: React.FC<QuoteResultCardProps> = ({ quote, badge, index, 
       {/* Quote content */}
       <div className="p-4">
         <p className="text-gray-700 text-base leading-relaxed italic">"{quote.text}"</p>
+        {quote.sourceUrl && (
+          <a
+            href={quote.sourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 mt-3 text-sm text-ev-light-blue hover:text-ev-teal transition-colors"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            <span>{quote.sourceName || 'View Source'}</span>
+          </a>
+        )}
       </div>
 
       {/* Action footer */}
