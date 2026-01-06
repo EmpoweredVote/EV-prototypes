@@ -8,6 +8,7 @@ interface QuoteCardProps {
   stackIndex?: number;
   displayNumber?: number; // Optional display number for the quote
   onDragStateChange?: (isDragging: boolean, x: MotionValue<number>) => void;
+  externalAnimating?: boolean; // When true, card is being animated externally (buttons/keyboard)
 }
 
 export const QuoteCard: React.FC<QuoteCardProps> = ({
@@ -15,12 +16,16 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({
   isStacked = false,
   stackIndex = 0,
   displayNumber,
-  onDragStateChange
+  onDragStateChange,
+  externalAnimating = false
 }) => {
   const { agreeWithQuote, disagreeWithQuote } = useReadRankStore();
   const [isAnimating, setIsAnimating] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-  
+
+  // Combined animating state (internal swipe or external button/keyboard)
+  const isCurrentlyAnimating = isAnimating || externalAnimating;
+
   // Only the top card (not stacked) should be interactive
   const isDraggable = !isStacked;
 
@@ -36,15 +41,15 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({
   };
 
   const handleDragEnd = async (_event: any, info: any) => {
-    if (isAnimating || !isDraggable) return;
+    if (isCurrentlyAnimating || !isDraggable) return;
 
     setIsDragging(false);
     onDragStateChange?.(false, x);
     const { offset } = info;
-    
+
     // Decision threshold - must drag past this point and release to commit
     const SWIPE_THRESHOLD = 150;
-    
+
     if (Math.abs(offset.x) > SWIPE_THRESHOLD) {
       // User released past threshold - commit the swipe
       await handleSwipe(offset.x > 0 ? 1 : -1);
@@ -55,7 +60,7 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({
   };
 
   const handleSwipe = async (direction: number) => {
-    if (isAnimating || !isDraggable) return;
+    if (isCurrentlyAnimating || !isDraggable) return;
     
     setIsAnimating(true);
     
@@ -82,7 +87,7 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({
 
   return (
     <motion.div
-      drag={isDraggable && !isAnimating}
+      drag={isDraggable && !isCurrentlyAnimating}
       dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
       dragElastic={0.7}
       onDragStart={isDraggable ? handleDragStart : undefined}
@@ -96,12 +101,12 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({
       }}
       className={`
         ev-quote-card w-full max-w-lg md:max-w-xl relative
-        ${isDraggable && !isAnimating ? 'cursor-grab active:cursor-grabbing' : 'cursor-default'}
+        ${isDraggable && !isCurrentlyAnimating ? 'cursor-grab active:cursor-grabbing' : 'cursor-default'}
         shadow-lg select-none touch-none
-        ${isAnimating ? 'pointer-events-none' : ''}
+        ${isCurrentlyAnimating ? 'pointer-events-none' : ''}
         ${isDragging ? 'ev-quote-card-dragging' : ''}
       `}
-      whileHover={isDraggable && !isAnimating && !isDragging ? { scale: 1.02 } : {}}
+      whileHover={isDraggable && !isCurrentlyAnimating && !isDragging ? { scale: 1.02 } : {}}
       transition={{ duration: 0.2 }}
     >
       {/* Quote Label - only show if displayNumber is provided */}

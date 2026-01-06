@@ -176,6 +176,7 @@ export const RankingPhase: React.FC = () => {
     assignBadge,
     setPhase,
     setRankedQuotes,
+    questionText,
   } = useReadRankStore();
 
   const handleAssignBadge = (quoteId: string, badge: 'diamond' | 'gold') => {
@@ -193,6 +194,15 @@ export const RankingPhase: React.FC = () => {
 
   return (
     <div className="space-y-6 md:space-y-8 pb-8">
+      {/* Question Banner */}
+      {questionText && (
+        <div className="question-banner mb-2">
+          <h2 className="font-manrope font-bold text-base md:text-lg text-ev-dark-blue text-center leading-snug">
+            {questionText}
+          </h2>
+        </div>
+      )}
+
       {/* Instructions */}
       <motion.div
         className="text-center max-w-2xl mx-auto"
@@ -288,11 +298,25 @@ export const RankingPhase: React.FC = () => {
           )}
           <motion.button
             onClick={handleContinue}
-            className="ev-button-primary text-base md:text-lg px-8 py-3 animate-gentle-pulse"
-            whileHover={{ scale: 1.05 }}
+            className="relative overflow-hidden bg-gradient-to-r from-ev-coral to-orange-500 hover:from-orange-500 hover:to-ev-coral text-white font-manrope font-bold text-base md:text-lg px-8 py-3 rounded-xl shadow-lg shadow-ev-coral/30 hover:shadow-xl hover:shadow-ev-coral/40 transition-all duration-300"
+            whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
           >
-            See Your Results
+            <motion.span
+              className="absolute inset-0 bg-white/20"
+              initial={{ x: '-100%', skewX: '-15deg' }}
+              animate={{ x: '200%' }}
+              transition={{ duration: 2, repeat: Infinity, repeatDelay: 3, ease: 'easeInOut' }}
+            />
+            <span className="relative flex items-center gap-2">
+              See Your Results
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </span>
           </motion.button>
         </motion.div>
       )}

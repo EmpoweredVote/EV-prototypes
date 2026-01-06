@@ -1,6 +1,27 @@
 import React from 'react';
+import { useDeviceType, type DeviceType } from '../hooks/useDeviceType';
 
-export const SwipeInstructions: React.FC = () => {
+interface SwipeInstructionsProps {
+  deviceTypeOverride?: DeviceType;
+}
+
+export const SwipeInstructions: React.FC<SwipeInstructionsProps> = ({
+  deviceTypeOverride,
+}) => {
+  const detectedDeviceType = useDeviceType();
+  const deviceType = deviceTypeOverride ?? detectedDeviceType;
+
+  const isTouchDevice = deviceType === 'touch';
+
+  // Dynamic instruction text based on device type
+  const disagreeText = isTouchDevice
+    ? 'Swipe left to disagree'
+    : 'Click Disagree or press ←';
+
+  const agreeText = isTouchDevice
+    ? 'Swipe right to agree'
+    : 'Click Agree or press →';
+
   return (
     <div className="swipe-instructions">
       {/* Disagree (Left) */}
@@ -20,12 +41,12 @@ export const SwipeInstructions: React.FC = () => {
             strokeLinejoin="round"
           />
         </svg>
-        <span className="swipe-label">Swipe left to disagree</span>
+        <span className="swipe-label">{disagreeText}</span>
       </div>
 
       {/* Agree (Right) */}
       <div className="swipe-instruction-item">
-        <span className="swipe-label">Swipe right to agree</span>
+        <span className="swipe-label">{agreeText}</span>
         <svg
           className="swipe-arrow swipe-arrow-right"
           width="20"

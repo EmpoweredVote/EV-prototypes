@@ -319,14 +319,32 @@ export const ResultsPhase: React.FC = () => {
       </div>
 
       {/* Back to Issues Button */}
-      <div className="flex justify-center pt-4">
-        <button
+      <motion.div
+        className="flex justify-center pt-4"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8 }}
+      >
+        <motion.button
           onClick={handleBackToIssues}
-          className="ev-button-primary text-base md:text-lg px-8 py-3"
+          className="relative overflow-hidden bg-gradient-to-r from-ev-light-blue to-ev-muted-blue hover:from-ev-muted-blue hover:to-ev-light-blue text-white font-manrope font-bold text-base md:text-lg px-8 py-3 rounded-xl shadow-lg shadow-ev-light-blue/30 hover:shadow-xl hover:shadow-ev-light-blue/40 transition-all duration-300"
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.95 }}
         >
-          Explore More Issues
-        </button>
-      </div>
+          <motion.span
+            className="absolute inset-0 bg-white/20"
+            initial={{ x: '-100%', skewX: '-15deg' }}
+            animate={{ x: '200%' }}
+            transition={{ duration: 2, repeat: Infinity, repeatDelay: 4, ease: 'easeInOut' }}
+          />
+          <span className="relative flex items-center gap-2">
+            Explore More Issues
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </span>
+        </motion.button>
+      </motion.div>
     </div>
   );
 };

@@ -4,21 +4,6 @@ import { useReadRankStore } from '../store/useReadRankStore';
 export const ProgressHeader: React.FC = () => {
   const { phase, issueTitle, reset, setPhase, goToHub } = useReadRankStore();
 
-  const getPhaseTitle = () => {
-    switch (phase) {
-      case 'hub':
-        return 'Choose an Issue';
-      case 'evaluation':
-        return 'Evaluate Quotes';
-      case 'ranking':
-        return 'Rank by Alignment';
-      case 'results':
-        return 'Your Results';
-      default:
-        return 'Choose an Issue';
-    }
-  };
-
   const getProgressPercentage = () => {
     switch (phase) {
       case 'hub':
@@ -94,19 +79,16 @@ export const ProgressHeader: React.FC = () => {
           </div>
         </div>
 
-        {/* Phase Title and Issue - Only show when not in hub */}
+        {/* Issue Title and Progress - Only show when not in hub */}
         {!isInHub && (
           <>
-            <div className="text-center mb-2">
-              <h2 className="ev-text-primary text-base md:text-xl font-manrope font-bold mb-1">
-                {getPhaseTitle()}
-              </h2>
-              {issueTitle && (
-                <h3 className="ev-text-secondary text-sm md:text-base font-manrope font-medium">
+            {issueTitle && (
+              <div className="text-center mb-2">
+                <h2 className="ev-text-secondary text-sm md:text-base font-manrope font-medium">
                   {issueTitle}
-                </h3>
-              )}
-            </div>
+                </h2>
+              </div>
+            )}
 
             {/* Progress Bar */}
             <div className="w-full bg-gray-200 rounded-full h-1.5 md:h-2 mb-1">
