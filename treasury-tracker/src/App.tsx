@@ -9,6 +9,7 @@ import BudgetBar from './components/BudgetBar';
 import CategoryList from './components/CategoryList';
 import LineItemsTable from './components/LineItemsTable';
 import TransactionLineItemsTable from './components/TransactionLineItemsTable';
+import LinkedTransactionsPanel from './components/LinkedTransactionsPanel';
 import type { BudgetCategory, BudgetData } from './types/budget';
 import './App.css'
 
@@ -27,15 +28,28 @@ async function loadDataset(type: DatasetType, year: number): Promise<BudgetData>
     salaries: 'salaries',
     transactions: 'transactions'
   };
-  
+
   const fileName = fileMap[type];
+
+  // For operating budget, try to load the linked version first (includes transaction data)
+  if (type === 'operating') {
+    try {
+      const linkedResponse = await fetch(`./data/${fileName}-${year}-linked.json`);
+      if (linkedResponse.ok) {
+        return linkedResponse.json();
+      }
+    } catch {
+      // Fall back to regular budget file
+    }
+  }
+
   // Use relative path that works with Vite's public directory
   const response = await fetch(`./data/${fileName}-${year}.json`);
-  
+
   if (!response.ok) {
     throw new Error(`Failed to load ${type} data for ${year}`);
   }
-  
+
   return response.json();
 }
 
@@ -397,27 +411,44 @@ function App() {
           
           {showLineItems ? (
             // Show line items table at the lowest level
-            activeDataset === 'transactions' ? (
-              <TransactionLineItemsTable 
-                lineItems={currentCategory!.lineItems!}
-                categoryName={currentCategory!.name}
-              />
-            ) : (
-              <LineItemsTable 
-                lineItems={currentCategory!.lineItems!}
-                categoryName={currentCategory!.name}
-              />
-            )
+            <>
+              {activeDataset === 'transactions' ? (
+                <TransactionLineItemsTable
+                  lineItems={currentCategory!.lineItems!}
+                  categoryName={currentCategory!.name}
+                />
+              ) : (
+                <LineItemsTable
+                  lineItems={currentCategory!.lineItems!}
+                  categoryName={currentCategory!.name}
+                />
+              )}
+              {/* Show linked transactions for budget categories */}
+              {activeDataset === 'operating' && currentCategory?.linkedTransactions && (
+                <LinkedTransactionsPanel
+                  linkedTransactions={currentCategory.linkedTransactions}
+                  categoryName={currentCategory.name}
+                />
+              )}
+            </>
           ) : displayCategories.length > 0 ? (
             <>
               {/* Visual budget bar (non-interactive) */}
               <BudgetBar categories={displayCategories} />
 
               {/* Interactive category list */}
-              <CategoryList 
+              <CategoryList
                 categories={displayCategories}
                 onCategoryClick={handleCategoryClick}
               />
+
+              {/* Show linked transactions summary for intermediate budget categories */}
+              {activeDataset === 'operating' && currentCategory?.linkedTransactions && (
+                <LinkedTransactionsPanel
+                  linkedTransactions={currentCategory.linkedTransactions}
+                  categoryName={currentCategory.name}
+                />
+              )}
             </>
           ) : (
             <div className="no-results">

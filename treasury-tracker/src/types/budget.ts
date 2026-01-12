@@ -23,6 +23,25 @@ export interface LineItem {
   };
 }
 
+export interface LinkedTransaction {
+  description: string;
+  amount: number;
+  vendor: string;
+  date: string;
+  paymentMethod?: string;
+  invoiceNumber?: string;
+  fund: string;
+  expenseCategory: string;
+}
+
+export interface LinkedTransactionSummary {
+  totalAmount: number;
+  transactionCount: number;
+  vendorCount: number;
+  topVendors: Array<{ name: string; amount: number; count: number }>;
+  transactions: LinkedTransaction[];
+}
+
 export interface BudgetCategory {
   name: string;
   amount: number;
@@ -34,6 +53,8 @@ export interface BudgetCategory {
   historicalChange?: number;
   items?: number; // Number of line items aggregated into this category
   lineItems?: LineItem[]; // Detailed line items at the lowest level
+  linkKey?: string; // Key for linking to transactions (priority|service|fund|expenseCategory)
+  linkedTransactions?: LinkedTransactionSummary; // Linked transaction data from transactions dataset
   metadata?: {
     // For salaries
     employeeCount?: number;

@@ -84,36 +84,69 @@ class BudgetProcessor {
   }
 
   /**
+   * Generate a linkKey for matching budget categories to transactions.
+   * The linkKey uses fields common to both datasets: priority, service, fund, item_category (expense category)
+   */
+  generateLinkKey(row, depth) {
+    // Fields that match between budget and transactions datasets
+    const parts = [];
+
+    // Only include fields up to and including the current depth
+    // Map hierarchy depth to link fields:
+    // depth 0 = primary_function (no link field)
+    // depth 1 = priority
+    // depth 2 = service
+    // depth 3 = fund
+    // depth 4 = item_category
+    const hierarchyToLinkField = {
+      'priority': 'priority',
+      'service': 'service',
+      'fund': 'fund',
+      'item_category': 'item_category'
+    };
+
+    for (let i = 0; i <= depth && i < this.config.hierarchy.length; i++) {
+      const hierarchyField = this.config.hierarchy[i];
+      if (hierarchyToLinkField[hierarchyField]) {
+        const value = row[hierarchyField] || '';
+        parts.push(value.toLowerCase().trim());
+      }
+    }
+
+    return parts.length > 0 ? parts.join('|') : null;
+  }
+
+  /**
    * Build hierarchical structure from flat data
    */
   buildHierarchy(data) {
     const hierarchy = this.config.hierarchy;
-    const amountCol = this.config.amountColumn;
-    
+
     // Build tree structure
     const tree = {};
-    
+
     data.forEach(row => {
       let current = tree;
-      
+
       // Navigate/create the hierarchy
       hierarchy.forEach((level, index) => {
         const key = row[level] || 'Uncategorized';
-        
+
         if (!current[key]) {
           current[key] = {
             name: key,
             items: [],
             children: {},
-            amount: 0
+            amount: 0,
+            depth: index
           };
         }
-        
+
         current[key].items.push(row);
         current = current[key].children;
       });
     });
-    
+
     // Convert tree to array format and calculate totals
     return this.treeToArray(tree, 0);
   }
@@ -124,12 +157,12 @@ class BudgetProcessor {
   treeToArray(tree, depth) {
     const result = [];
     const isLowestLevel = depth === this.config.hierarchy.length - 1;
-    
+
     // DON'T reset color assigner for subcategories - we want continuous color distribution
-    
+
     for (const [name, node] of Object.entries(tree)) {
       const amount = this.calculateTotal(node.items);
-      
+
       const category = {
         name: name,
         amount: amount,
@@ -137,7 +170,16 @@ class BudgetProcessor {
         color: this.getNextColor(),
         items: node.items.length
       };
-      
+
+      // Generate linkKey for matching to transactions
+      // Use the first item to generate the linkKey since all items in this node share the same hierarchy path
+      if (node.items.length > 0) {
+        const linkKey = this.generateLinkKey(node.items[0], depth);
+        if (linkKey) {
+          category.linkKey = linkKey;
+        }
+      }
+
       // Add description if available
       if (node.items.length > 0 && this.config.descriptionFields) {
         const descriptions = node.items
@@ -148,14 +190,14 @@ class BudgetProcessor {
               .join(' - ');
           })
           .filter(Boolean);
-        
+
         if (descriptions.length > 0) {
           // Take first unique description or combine if there are few items
           const uniqueDescriptions = [...new Set(descriptions)];
           category.description = uniqueDescriptions.slice(0, 3).join('; ');
         }
       }
-      
+
       // At the lowest level, include detailed line items
       if (isLowestLevel && node.items.length > 0) {
         category.lineItems = node.items.map(item => ({
@@ -164,15 +206,15 @@ class BudgetProcessor {
           actualAmount: parseFloat(item.actual_amount) || 0
         }));
       }
-      
+
       // Recursively process children
       if (Object.keys(node.children).length > 0) {
         category.subcategories = this.treeToArray(node.children, depth + 1);
       }
-      
+
       result.push(category);
     }
-    
+
     return result.sort((a, b) => b.amount - a.amount);
   }
 
