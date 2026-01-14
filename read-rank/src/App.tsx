@@ -3,6 +3,7 @@ import { PhaseContainer } from './components/PhaseContainer';
 import { ProgressHeader } from './components/ProgressHeader';
 import { DevHelper } from './components/DevHelper';
 import { CandidateAlignmentPage } from './components/CandidateAlignmentPage';
+import { AnimationOptionsPage } from './components/AnimationOptionsPage';
 
 function MainApp() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <Routes>
         <Route path="/" element={<MainApp />} />
         <Route path="/candidate/:candidateId/alignment" element={<CandidateAlignmentPage />} />
+        <Route path="/animation-options" element={<AnimationOptionsPage />} />
       </Routes>
     </BrowserRouter>
   );

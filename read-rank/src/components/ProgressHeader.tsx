@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useReadRankStore } from '../store/useReadRankStore';
 
 export const ProgressHeader: React.FC = () => {
@@ -67,8 +68,15 @@ export const ProgressHeader: React.FC = () => {
             Read & Rank
           </h1>
 
-          {/* Reset Button - Right side */}
-          <div className="flex-1 flex justify-end">
+          {/* Reset Button & Animation Options - Right side */}
+          <div className="flex-1 flex justify-end items-center gap-3">
+            <Link
+              to="/animation-options"
+              className="text-xs text-gray-400 hover:text-ev-light-blue transition-colors duration-200 font-manrope font-medium"
+              title="View animation options"
+            >
+              🎮 Animations
+            </Link>
             <button
               onClick={handleReset}
               className="text-xs text-gray-400 hover:text-ev-coral transition-colors duration-200 font-manrope font-medium"
