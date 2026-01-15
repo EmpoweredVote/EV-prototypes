@@ -1,0 +1,196 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+/* Define custom theme variables */
+@theme {
+  /* Custom Colors - EV Brand */
+  --color-ev-black: #1c1c1c;
+  --color-ev-white: #ffffff;
+  --color-ev-coral: #ff5740;
+  --color-ev-muted-blue: #00657c;
+  --color-ev-light-blue: #59b0c4;
+  --color-ev-yellow: #fed12e;
+
+  /* Custom Font Family */
+  --font-family-manrope: 'Manrope', sans-serif;
+
+  /* Custom Spacing */
+  --spacing-18: 4.5rem;
+  --spacing-88: 22rem;
+  --spacing-112: 28rem;
+  --spacing-128: 32rem;
+}
+
+/* Global styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Manrope', sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgb(243 244 246);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #59b0c4;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #00657c;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Additional custom styles for learning modules */
+
+/* Prose styling for content sections */
+.prose-content p {
+  margin-bottom: 1rem;
+  line-height: 1.75;
+}
+
+.prose-content h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.3s ease-out;
+}
+
+/* Focus states for accessibility */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-ev-muted-blue);
+  outline-offset: 2px;
+}
+
+/* Custom link styling */
+a.external-link {
+  color: var(--color-ev-muted-blue);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a.external-link:hover {
+  color: var(--color-ev-coral);
+}
+
+/* Progress bar animation */
+.progress-bar-fill {
+  transition: width 0.5s ease-out;
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Knowledge check styling */
+.knowledge-check-option {
+  transition: all 0.2s ease;
+}
+
+.knowledge-check-option:hover:not(:disabled) {
+  border-color: var(--color-ev-light-blue);
+}
+
+/* Badge celebration animation */
+@keyframes celebrate {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.badge-celebrate {
+  animation: celebrate 0.5s ease-out;
+}
+
+/* Stat card styling */
+.stat-card {
+  background: linear-gradient(135deg, rgba(89, 176, 196, 0.1) 0%, rgba(0, 101, 124, 0.05) 100%);
+}
+
+/* Interactive placeholder pulse */
+@keyframes gentle-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(254, 209, 46, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(254, 209, 46, 0);
+  }
+}
+
+.interactive-placeholder-pulse {
+  animation: gentle-pulse 2s ease-in-out infinite;
+}
