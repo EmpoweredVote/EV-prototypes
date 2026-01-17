@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "Feature prototypes collection",
   "scripts": {
-    "build:all": "npm run build:read-rank && npm run build:treasury && npm run build:badges",
+    "build:all": "npm run build:read-rank && npm run build:treasury && npm run build:badges && npm run build:data-entry",
     "build:read-rank": "cd read-rank && npm install && npm run build",
     "build:treasury": "cd treasury-tracker && npm install && npm run build",
-    "build:badges": "cd empowered-badges && npm install && npm run build"
+    "build:badges": "cd empowered-badges && npm install && npm run build",
+    "build:data-entry": "cd data-entry && npm install && npm run build"
   }
 }
