@@ -598,6 +598,13 @@ button:disabled, .btn-primary:disabled, .btn-secondary:disabled {
   min-height: 80px;
 }
 
+.form-hint {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: var(--gray-500);
+}
+
 .form-actions {
   display: flex;
   gap: 12px;

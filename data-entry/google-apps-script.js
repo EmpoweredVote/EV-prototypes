@@ -129,6 +129,9 @@ function getSheetData(sheet) {
 
 /**
  * Add a new politician
+ *
+ * Politicians Sheet columns:
+ * external_id | full_name | party | office | office_level | state | district | added_by | added_at
  */
 function addPolitician(data) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -137,9 +140,11 @@ function addPolitician(data) {
   const newRow = [
     '', // external_id (blank for new entries)
     data.full_name,
-    data.party,
+    data.party || '',
     data.office,
-    data.office_level,
+    data.office_level || '',
+    data.state,
+    data.district || '',
     data.added_by,
     new Date().toISOString()
   ];

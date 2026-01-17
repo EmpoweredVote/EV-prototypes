@@ -2,13 +2,22 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { getData } from '../../api/sheets'
 
+const OFFICE_LEVEL_LABELS = {
+  federal: 'Federal',
+  state: 'State',
+  municipal: 'Municipal',
+  school_district: 'School District'
+}
+
 function PoliticianList() {
   const [politicians, setPoliticians] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterParty, setFilterParty] = useState('')
+  const [filterOffice, setFilterOffice] = useState('')
   const [filterLevel, setFilterLevel] = useState('')
+  const [filterState, setFilterState] = useState('')
 
   useEffect(() => {
     loadData()
@@ -28,18 +37,30 @@ function PoliticianList() {
   }
 
   const parties = [...new Set(politicians.map(p => p.party).filter(Boolean))].sort()
+  const offices = [...new Set(politicians.map(p => p.office).filter(Boolean))].sort()
   const levels = [...new Set(politicians.map(p => p.office_level).filter(Boolean))].sort()
+  const states = [...new Set(politicians.map(p => p.state).filter(Boolean))].sort()
 
   const filteredPoliticians = politicians.filter(p => {
     const matchesSearch = !searchTerm ||
       p.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.office.toLowerCase().includes(searchTerm.toLowerCase())
+      (p.district && p.district.toLowerCase().includes(searchTerm.toLowerCase()))
 
     const matchesParty = !filterParty || p.party === filterParty
+    const matchesOffice = !filterOffice || p.office === filterOffice
     const matchesLevel = !filterLevel || p.office_level === filterLevel
+    const matchesState = !filterState || p.state === filterState
 
-    return matchesSearch && matchesParty && matchesLevel
+    return matchesSearch && matchesParty && matchesOffice && matchesLevel && matchesState
   })
+
+  // Format the location display
+  const formatLocation = (politician) => {
+    const parts = []
+    if (politician.state) parts.push(politician.state)
+    if (politician.district) parts.push(`District ${politician.district}`)
+    return parts.join(' - ')
+  }
 
   if (loading) {
     return <div className="loading">Loading...</div>
@@ -65,7 +86,7 @@ function PoliticianList() {
         <div className="search-bar">
           <input
             type="text"
-            placeholder="Search by name or office..."
+            placeholder="Search by name or district..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -86,7 +107,25 @@ function PoliticianList() {
           >
             <option value="">All Levels</option>
             {levels.map(level => (
-              <option key={level} value={level}>{level}</option>
+              <option key={level} value={level}>{OFFICE_LEVEL_LABELS[level] || level}</option>
+            ))}
+          </select>
+          <select
+            value={filterOffice}
+            onChange={(e) => setFilterOffice(e.target.value)}
+          >
+            <option value="">All Offices</option>
+            {offices.map(office => (
+              <option key={office} value={office}>{office}</option>
+            ))}
+          </select>
+          <select
+            value={filterState}
+            onChange={(e) => setFilterState(e.target.value)}
+          >
+            <option value="">All States</option>
+            {states.map(state => (
+              <option key={state} value={state}>{state}</option>
             ))}
           </select>
         </div>
@@ -98,7 +137,7 @@ function PoliticianList() {
 
       {filteredPoliticians.length === 0 ? (
         <div className="empty-state">
-          {searchTerm || filterParty || filterLevel
+          {searchTerm || filterParty || filterOffice || filterLevel || filterState
             ? 'No politicians match your filters.'
             : 'No politicians added yet.'}
         </div>
@@ -109,10 +148,10 @@ function PoliticianList() {
               <div className="politician-info">
                 <h3>{politician.full_name}</h3>
                 <p className="politician-meta">
-                  <span className="party">{politician.party}</span>
-                  <span className="office">{politician.office}</span>
-                  {politician.office_level && (
-                    <span className="level">{politician.office_level}</span>
+                  {politician.party && <span className="party">{politician.party}</span>}
+                  {politician.office && <span className="office">{politician.office}</span>}
+                  {(politician.state || politician.district) && (
+                    <span className="location">{formatLocation(politician)}</span>
                   )}
                 </p>
               </div>
