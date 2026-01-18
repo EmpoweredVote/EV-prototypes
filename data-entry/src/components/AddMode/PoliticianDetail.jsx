@@ -113,7 +113,7 @@ function PoliticianDetail() {
                 <span className={`status-icon ${status.class}`}>{status.icon}</span>
               </div>
               <div className="issue-info">
-                <h3>{issue.shortTitle || issue.title}</h3>
+                <h3>{issue.title}</h3>
                 <p className="issue-status-label">{status.label}</p>
               </div>
             </Link>
