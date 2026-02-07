@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Explorer — Empowered Vote</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: #f5f7fa;
+      color: #1c1c1c;
+      line-height: 1.5;
+    }
+    header {
+      background: linear-gradient(135deg, #00657c 0%, #59b0c4 100%);
+      color: #fff;
+      padding: 2rem 2rem 1.5rem;
+    }
+    header h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.25rem; }
+    header p { opacity: 0.85; font-size: 0.95rem; max-width: 800px; }
+    main { padding: 1.5rem 2rem 3rem; max-width: 1400px; margin: 0 auto; }
+    .back-link {
+      display: inline-block; margin-bottom: 1rem;
+      font-size: 0.85rem; color: #00657c; text-decoration: none;
+    }
+    .back-link:hover { text-decoration: underline; }
+    .note-box {
+      background: #fef3e2; border: 1px solid #f5d78e; border-radius: 10px;
+      padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.85rem; color: #7c5a00;
+    }
+    .note-box strong { font-weight: 700; }
+
+    .official-card {
+      background: #fff; border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      overflow: hidden; margin-bottom: 2rem;
+    }
+    .card-header {
+      padding: 1.25rem 1.5rem;
+      display: flex; align-items: center; gap: 1rem;
+      border-bottom: 1px solid #eee;
+    }
+    .card-header img {
+      width: 64px; height: 64px; border-radius: 50%;
+      object-fit: cover; flex-shrink: 0;
+    }
+    .card-header .no-photo {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: #e8edf1; display: flex; align-items: center;
+      justify-content: center; color: #999; font-size: 0.7rem; flex-shrink: 0;
+    }
+    .card-header .info h2 { font-size: 1.15rem; font-weight: 700; color: #00657c; }
+    .card-header .info p { font-size: 0.82rem; color: #666; }
+    .card-label {
+      display: inline-block; font-size: 0.65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 0.2rem 0.5rem; border-radius: 12px; margin-bottom: 0.2rem;
+    }
+    .label-senator  { background: #e6f7f9; color: #00657c; }
+    .label-justice  { background: #f3e8ff; color: #7c3aed; }
+    .label-judge    { background: #fce7e7; color: #c53030; }
+    .label-council  { background: #fef3e2; color: #b87400; }
+
+    table { width: 100%; border-collapse: collapse; }
+    tr { border-bottom: 1px solid #f0f0f0; }
+    tr:last-child { border-bottom: none; }
+    td { padding: 0.45rem 1.5rem; vertical-align: top; font-size: 0.82rem; }
+    .fn { width: 200px; font-weight: 600; color: #555; white-space: nowrap; }
+    .fv { color: #1c1c1c; word-break: break-word; }
+    .fv.empty { color: #bbb; font-style: italic; }
+    .fv a { color: #00657c; text-decoration: none; }
+    .fv a:hover { text-decoration: underline; }
+    .section-divider td {
+      padding: 0.5rem 1.5rem;
+      background: #f5f7fa;
+      font-size: 0.72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: #888;
+    }
+    .nested { padding-left: 1rem; }
+    .nested-item {
+      background: #f9fafb; border: 1px solid #eee; border-radius: 8px;
+      padding: 0.6rem 0.8rem; margin-bottom: 0.4rem; font-size: 0.78rem;
+    }
+    .nested-item .ni-label { font-weight: 600; color: #555; display: inline-block; min-width: 120px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Data Explorer</h1>
+    <p>
+      Raw BallotReady API data for four officeholders showing every available field.
+      This is the complete data the API provides — use it to plan which fields to incorporate into the profile page redesign.
+    </p>
+  </header>
+  <main>
+    <a href="index.html" class="back-link">&larr; Back to Features</a>
+
+    <div class="note-box">
+      <strong>Data source:</strong> BallotReady / CivicEngine GraphQL API, queried for Bloomington, IN (47401).
+      <br><strong>Note:</strong> The sample data below does not include an appointed official, mayor, or school board member because those weren't returned for this location. However, the field structure is identical for all officeholder types. Fields marked <em>(empty)</em> have no value in the API response for that official.
+      <br><strong>Fields we DON'T currently store</strong> are marked with a <span style="background:#ff5740;color:#fff;padding:0.1rem 0.4rem;border-radius:4px;font-size:0.72rem;font-weight:700;">NEW</span> badge.
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 1. TODD YOUNG — U.S. Senator -->
+    <!-- ============================================================ -->
+    <div class="official-card">
+      <div class="card-header">
+        <img src="https://assets.civicengine.com/uploads/candidate/headshot/644004/644004.jpg" alt="Todd Young">
+        <div class="info">
+          <span class="card-label label-senator">U.S. Senator</span>
+          <h2>Todd Young</h2>
+          <p>U.S. Senate - Indiana &middot; Republican</p>
+        </div>
+      </div>
+      <table>
+        <tr class="section-divider"><td colspan="2">OfficeHolder (top-level)</td></tr>
+        <tr><td class="fn">id</td><td class="fv">Z2lkOi8vYmFsbG90LWZhY3RvcnkvT2ZmaWNlSG9sZGVyLzM1NDQxOQ==</td></tr>
+        <tr><td class="fn">databaseId</td><td class="fv">354419</td></tr>
+        <tr><td class="fn">isAppointed</td><td class="fv">false</td></tr>
+        <tr><td class="fn">isCurrent</td><td class="fv">true</td></tr>
+        <tr><td class="fn">isVacant</td><td class="fv">false</td></tr>
+        <tr><td class="fn">startAt</td><td class="fv">2023-01-03</td></tr>
+        <tr><td class="fn">endAt</td><td class="fv">2029-01-03</td></tr>
+        <tr><td class="fn">officeTitle</td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">totalYearsInOffice <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">9</td></tr>
+
+        <tr class="section-divider"><td colspan="2">Person</td></tr>
+        <tr><td class="fn">person.id</td><td class="fv">Z2lkOi8vYmFsbG90LWZhY3RvcnkvQ2FuZGlkYXRlLzY0NDAwNA==</td></tr>
+        <tr><td class="fn">person.databaseId</td><td class="fv">644004</td></tr>
+        <tr><td class="fn">person.fullName</td><td class="fv">Todd Young</td></tr>
+        <tr><td class="fn">person.firstName</td><td class="fv">Todd</td></tr>
+        <tr><td class="fn">person.middleName</td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.lastName</td><td class="fv">Young</td></tr>
+        <tr><td class="fn">person.nickname</td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.suffix</td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.bioText <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.bioguideId <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">Y000064</td></tr>
+        <tr><td class="fn">person.slug <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">todd-young</td></tr>
+
+        <tr class="section-divider"><td colspan="2">Person &rarr; Images <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">images[0]</td><td class="fv"><a href="https://assets.civicengine.com/uploads/candidate/headshot/644004/644004.jpg" target="_blank">default: 644004.jpg</a></td></tr>
+        <tr><td class="fn">images[1]</td><td class="fv"><a href="https://assets.civicengine.com/uploads/candidate/headshot/644004/thumb_644004.jpg" target="_blank">thumb: thumb_644004.jpg</a></td></tr>
+
+        <tr class="section-divider"><td colspan="2">Person &rarr; Contacts <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW (separate from officeholder contacts)</span></td></tr>
+        <tr><td class="fn">person.contacts[0]</td><td class="fv">email: contact@toddyoung.org &middot; phone: 202-224-5623 &middot; type: (null)</td></tr>
+
+        <tr class="section-divider"><td colspan="2">Person &rarr; Degrees <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">degrees[0]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">degree:</span> Master's<br><span class="ni-label">major:</span> American Politics<br><span class="ni-label">school:</span> University of London<br><span class="ni-label">gradYear:</span> 2001</div>
+        </td></tr>
+        <tr><td class="fn">degrees[1]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">degree:</span> High School Diploma<br><span class="ni-label">school:</span> Carmel High School<br><span class="ni-label">gradYear:</span> 1990</div>
+        </td></tr>
+        <tr><td class="fn">degrees[2]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">degree:</span> MBA<br><span class="ni-label">school:</span> University of Chicago<br><span class="ni-label">gradYear:</span> 2000</div>
+        </td></tr>
+        <tr><td class="fn">degrees[3]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">degree:</span> Bachelor's<br><span class="ni-label">major:</span> Political Science<br><span class="ni-label">school:</span> US Naval Academy<br><span class="ni-label">gradYear:</span> 1995</div>
+        </td></tr>
+        <tr><td class="fn">degrees[4]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">degree:</span> JD<br><span class="ni-label">school:</span> Indiana University<br><span class="ni-label">gradYear:</span> 2006</div>
+        </td></tr>
+
+        <tr class="section-divider"><td colspan="2">Person &rarr; Experiences <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">experiences[0]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">title:</span> Representative - District 9<br><span class="ni-label">organization:</span> US House of Representatives<br><span class="ni-label">type:</span> elected_office<br><span class="ni-label">start:</span> 2011 <span class="ni-label">end:</span> 2017</div>
+        </td></tr>
+        <tr><td class="fn">experiences[1]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">title:</span> Assistant Deputy Prosecutor<br><span class="ni-label">organization:</span> Orange County, IN<br><span class="ni-label">type:</span> employment<br><span class="ni-label">start:</span> 2007 <span class="ni-label">end:</span> 2010</div>
+        </td></tr>
+        <tr><td class="fn">experiences[2]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">title:</span> Intelligence Officer<br><span class="ni-label">organization:</span> US Marine Corps<br><span class="ni-label">type:</span> military<br><span class="ni-label">start:</span> 1995 <span class="ni-label">end:</span> 2000</div>
+        </td></tr>
+        <tr><td class="fn">experiences[3]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">title:</span> Legal Consultant<br><span class="ni-label">organization:</span> Bloomington Law Firm<br><span class="ni-label">type:</span> employment</div>
+        </td></tr>
+        <tr><td class="fn">experiences[4]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">title:</span> Legislative Assistant<br><span class="ni-label">organization:</span> Office of US Senator Richard Lugar<br><span class="ni-label">type:</span> employment<br><span class="ni-label">start:</span> 2001 <span class="ni-label">end:</span> 2003</div>
+        </td></tr>
+        <tr><td class="fn">experiences[5]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">organization:</span> The Heritage Foundation<br><span class="ni-label">type:</span> employment</div>
+        </td></tr>
+        <tr><td class="fn">experiences[6]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">organization:</span> US Navy<br><span class="ni-label">type:</span> military<br><span class="ni-label">start:</span> 1990 <span class="ni-label">end:</span> 1991</div>
+        </td></tr>
+        <tr><td class="fn">experiences[7]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">title:</span> Senator - IN<br><span class="ni-label">organization:</span> US Senate<br><span class="ni-label">type:</span> elected_office<br><span class="ni-label">start:</span> 2017 <span class="ni-label">end:</span> Present</div>
+        </td></tr>
+
+        <tr class="section-divider"><td colspan="2">Person &rarr; URLs</td></tr>
+        <tr><td class="fn">person.urls[0]</td><td class="fv"><a href="https://en.wikipedia.org/wiki/Todd_Young" target="_blank">wikipedia</a></td></tr>
+        <tr><td class="fn">person.urls[1]</td><td class="fv"><a href="https://www.young.senate.gov/" target="_blank">government</a></td></tr>
+
+        <tr class="section-divider"><td colspan="2">Parties</td></tr>
+        <tr><td class="fn">parties[0].name</td><td class="fv">Republican</td></tr>
+        <tr><td class="fn">parties[0].shortName <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">R</td></tr>
+
+        <tr class="section-divider"><td colspan="2">Position</td></tr>
+        <tr><td class="fn">position.id</td><td class="fv">Z2lkOi8vYmFsbG90LWZhY3RvcnkvUG9zaXRpb24vNDYxNzQ=</td></tr>
+        <tr><td class="fn">position.name</td><td class="fv">U.S. Senate - Indiana</td></tr>
+        <tr><td class="fn">position.description <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">The U.S. Senate is one of two chambers of the federal legislature. Senators are responsible for writing and passing legislation, approving presidential appointments, and ratifying treaties with foreign countries.</td></tr>
+        <tr><td class="fn">position.level</td><td class="fv">FEDERAL</td></tr>
+        <tr><td class="fn">position.appointed</td><td class="fv">false</td></tr>
+        <tr><td class="fn">position.judicial</td><td class="fv">false</td></tr>
+        <tr><td class="fn">position.tier <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">1</td></tr>
+        <tr><td class="fn">position.seats <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">1</td></tr>
+
+        <tr class="section-divider"><td colspan="2">OfficeHolder &rarr; Contacts</td></tr>
+        <tr><td class="fn">contacts[0]</td><td class="fv">phone: 202-224-5623 &middot; type: central</td></tr>
+        <tr><td class="fn">contacts[1]</td><td class="fv">phone: 317-226-6700 &middot; type: office</td></tr>
+        <tr><td class="fn">contacts[2]</td><td class="fv">phone: 812-542-4820 &middot; type: other</td></tr>
+        <tr><td class="fn">contacts[3]</td><td class="fv">email: todd.young@mail.house.gov &middot; type: primary</td></tr>
+
+        <tr class="section-divider"><td colspan="2">OfficeHolder &rarr; Addresses</td></tr>
+        <tr><td class="fn">addresses[0]</td><td class="fv">185 Dirksen Senate Office Building, Washington, DC 20510</td></tr>
+
+        <tr class="section-divider"><td colspan="2">OfficeHolder &rarr; URLs</td></tr>
+        <tr><td class="fn">urls[0]</td><td class="fv"><a href="https://en.wikipedia.org/wiki/Todd_Young" target="_blank">wikipedia</a></td></tr>
+        <tr><td class="fn">urls[1]</td><td class="fv"><a href="https://www.young.senate.gov/" target="_blank">website</a></td></tr>
+        <tr><td class="fn">urls[2]</td><td class="fv"><a href="https://www.young.senate.gov/contact/email-todd" target="_blank">contact</a></td></tr>
+        <tr><td class="fn">urls[3]</td><td class="fv"><a href="https://www.facebook.com/ToddYoungIndiana" target="_blank">facebook</a></td></tr>
+        <tr><td class="fn">urls[4]</td><td class="fv"><a href="https://twitter.com/ToddYoungIN" target="_blank">twitter</a></td></tr>
+        <tr><td class="fn">urls[5]</td><td class="fv"><a href="https://www.instagram.com/sentoddyoung/" target="_blank">instagram</a></td></tr>
+      </table>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 2. CHRISTOPHER M. GOFF — Indiana Supreme Court Justice -->
+    <!-- ============================================================ -->
+    <div class="official-card">
+      <div class="card-header">
+        <img src="https://assets.civicengine.com/uploads/candidate/headshot/476110/476110.jpg" alt="Christopher M. Goff">
+        <div class="info">
+          <span class="card-label label-justice">Judicial</span>
+          <h2>Christopher M. Goff</h2>
+          <p>Indiana Supreme Court Justice &middot; Nonpartisan</p>
+        </div>
+      </div>
+      <table>
+        <tr class="section-divider"><td colspan="2">OfficeHolder (top-level)</td></tr>
+        <tr><td class="fn">id</td><td class="fv">Z2lkOi8vYmFsbG90LWZhY3RvcnkvT2ZmaWNlSG9sZGVyLzIwNjE4Mg==</td></tr>
+        <tr><td class="fn">databaseId</td><td class="fv">206182</td></tr>
+        <tr><td class="fn">isAppointed</td><td class="fv">false</td></tr>
+        <tr><td class="fn">isCurrent</td><td class="fv">true</td></tr>
+        <tr><td class="fn">isVacant</td><td class="fv">false</td></tr>
+        <tr><td class="fn">startAt</td><td class="fv">2021-01-01</td></tr>
+        <tr><td class="fn">endAt</td><td class="fv">2030-12-31</td></tr>
+        <tr><td class="fn">officeTitle</td><td class="fv">Indiana Supreme Court Justice</td></tr>
+        <tr><td class="fn">totalYearsInOffice <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">9</td></tr>
+
+        <tr class="section-divider"><td colspan="2">Person</td></tr>
+        <tr><td class="fn">person.id</td><td class="fv">Z2lkOi8vYmFsbG90LWZhY3RvcnkvQ2FuZGlkYXRlLzQ3NjExMA==</td></tr>
+        <tr><td class="fn">person.databaseId</td><td class="fv">476110</td></tr>
+        <tr><td class="fn">person.fullName</td><td class="fv">Christopher M. Goff</td></tr>
+        <tr><td class="fn">person.firstName</td><td class="fv">Christopher</td></tr>
+        <tr><td class="fn">person.middleName</td><td class="fv">M.</td></tr>
+        <tr><td class="fn">person.lastName</td><td class="fv">Goff</td></tr>
+        <tr><td class="fn">person.nickname</td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.suffix</td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.bioText <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.bioguideId <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.slug <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">christopher-m-goff</td></tr>
+
+        <tr class="section-divider"><td colspan="2">Person &rarr; Images <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">images[0]</td><td class="fv"><a href="https://assets.civicengine.com/uploads/candidate/headshot/476110/476110.jpg" target="_blank">default: 476110.jpg</a></td></tr>
+        <tr><td class="fn">images[1]</td><td class="fv"><a href="https://assets.civicengine.com/uploads/candidate/headshot/476110/thumb_476110.jpg" target="_blank">thumb: thumb_476110.jpg</a></td></tr>
+
+        <tr class="section-divider"><td colspan="2">Person &rarr; Degrees <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">degrees[0]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">degree:</span> JD<br><span class="ni-label">school:</span> Indiana University<br><span class="ni-label">gradYear:</span> 1996</div>
+        </td></tr>
+        <tr><td class="fn">degrees[1]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">degree:</span> Bachelor's<br><span class="ni-label">school:</span> Ball State University<br><span class="ni-label">gradYear:</span> 1994</div>
+        </td></tr>
+
+        <tr class="section-divider"><td colspan="2">Person &rarr; Experiences <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">experiences[0]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">title:</span> Adjunct Professor<br><span class="ni-label">organization:</span> Indiana University<br><span class="ni-label">type:</span> employment</div>
+        </td></tr>
+        <tr><td class="fn">experiences[1]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">title:</span> Justice<br><span class="ni-label">organization:</span> Indiana Supreme Court<br><span class="ni-label">type:</span> elected_office<br><span class="ni-label">start:</span> 2017 <span class="ni-label">end:</span> Present</div>
+        </td></tr>
+        <tr><td class="fn">experiences[2]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">title:</span> Judge<br><span class="ni-label">organization:</span> Wabash County Superior Court<br><span class="ni-label">type:</span> elected_office<br><span class="ni-label">start:</span> 2005 <span class="ni-label">end:</span> 2017</div>
+        </td></tr>
+        <tr><td class="fn">experiences[3]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">title:</span> Public Defender<br><span class="ni-label">organization:</span> Huntington County<br><span class="ni-label">type:</span> employment</div>
+        </td></tr>
+        <tr><td class="fn">experiences[4]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">title:</span> Partner<br><span class="ni-label">organization:</span> Mills, Northrop &amp; Goff<br><span class="ni-label">type:</span> employment</div>
+        </td></tr>
+
+        <tr class="section-divider"><td colspan="2">Person &rarr; URLs</td></tr>
+        <tr><td class="fn">person.urls[0]</td><td class="fv"><a href="https://en.wikipedia.org/wiki/Christopher_M._Goff" target="_blank">wikipedia</a></td></tr>
+        <tr><td class="fn">person.urls[1]</td><td class="fv"><a href="https://www.in.gov/judiciary/supreme/2583.htm" target="_blank">government</a></td></tr>
+
+        <tr class="section-divider"><td colspan="2">Parties</td></tr>
+        <tr><td class="fn">parties[0].name</td><td class="fv">Nonpartisan</td></tr>
+        <tr><td class="fn">parties[0].shortName <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">NP</td></tr>
+
+        <tr class="section-divider"><td colspan="2">Position</td></tr>
+        <tr><td class="fn">position.name</td><td class="fv">Indiana Supreme Court Justice (Retain Goff?)</td></tr>
+        <tr><td class="fn">position.description <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">The State Supreme Court is responsible for final appeals. Judges in this position are seeking to retain their current seat.</td></tr>
+        <tr><td class="fn">position.level</td><td class="fv">STATE</td></tr>
+        <tr><td class="fn">position.appointed</td><td class="fv">false</td></tr>
+        <tr><td class="fn">position.judicial</td><td class="fv">true</td></tr>
+        <tr><td class="fn">position.tier <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">2</td></tr>
+        <tr><td class="fn">position.seats <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">1</td></tr>
+
+        <tr class="section-divider"><td colspan="2">OfficeHolder &rarr; Contacts</td></tr>
+        <tr><td class="fn">contacts[0]</td><td class="fv">phone: 317-232-2546 &middot; type: central</td></tr>
+
+        <tr class="section-divider"><td colspan="2">OfficeHolder &rarr; Addresses</td></tr>
+        <tr><td class="fn">addresses[0]</td><td class="fv">200 W. Washington Street, Indianapolis, IN 46204</td></tr>
+
+        <tr class="section-divider"><td colspan="2">OfficeHolder &rarr; URLs</td></tr>
+        <tr><td class="fn">urls[0]</td><td class="fv"><a href="https://www.in.gov/courts/supreme/justices/christopher-goff/" target="_blank">website</a></td></tr>
+      </table>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 3. KARA ELAINE KROTHE — Local Circuit Court Judge -->
+    <!-- ============================================================ -->
+    <div class="official-card">
+      <div class="card-header">
+        <img src="https://assets.civicengine.com/uploads/candidate/headshot/406362/406362.jpg" alt="Kara Elaine Krothe">
+        <div class="info">
+          <span class="card-label label-judge">Local Circuit Judge</span>
+          <h2>Kara Elaine Krothe</h2>
+          <p>10th Circuit (Monroe County), Seat 5 &middot; Democratic</p>
+        </div>
+      </div>
+      <table>
+        <tr class="section-divider"><td colspan="2">OfficeHolder (top-level)</td></tr>
+        <tr><td class="fn">id</td><td class="fv">Z2lkOi8vYmFsbG90LWZhY3RvcnkvT2ZmaWNlSG9sZGVyLzIwNjE5Mw==</td></tr>
+        <tr><td class="fn">databaseId</td><td class="fv">206193</td></tr>
+        <tr><td class="fn">isAppointed</td><td class="fv">false</td></tr>
+        <tr><td class="fn">isCurrent</td><td class="fv">true</td></tr>
+        <tr><td class="fn">isVacant</td><td class="fv">false</td></tr>
+        <tr><td class="fn">startAt</td><td class="fv">2021-01-01</td></tr>
+        <tr><td class="fn">endAt</td><td class="fv">2026-12-31</td></tr>
+        <tr><td class="fn">officeTitle</td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">totalYearsInOffice <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">5</td></tr>
+
+        <tr class="section-divider"><td colspan="2">Person</td></tr>
+        <tr><td class="fn">person.id</td><td class="fv">Z2lkOi8vYmFsbG90LWZhY3RvcnkvQ2FuZGlkYXRlLzQwNjM2Mg==</td></tr>
+        <tr><td class="fn">person.databaseId</td><td class="fv">406362</td></tr>
+        <tr><td class="fn">person.fullName</td><td class="fv">Kara Elaine Krothe</td></tr>
+        <tr><td class="fn">person.firstName</td><td class="fv">Kara</td></tr>
+        <tr><td class="fn">person.middleName</td><td class="fv">Elaine</td></tr>
+        <tr><td class="fn">person.lastName</td><td class="fv">Krothe</td></tr>
+        <tr><td class="fn">person.nickname</td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.suffix</td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.bioText <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.bioguideId <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.slug <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">kara-elaine-krothe</td></tr>
+
+        <tr class="section-divider"><td colspan="2">Person &rarr; Images <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">images[0]</td><td class="fv"><a href="https://assets.civicengine.com/uploads/candidate/headshot/406362/406362.jpg" target="_blank">default: 406362.jpg</a></td></tr>
+        <tr><td class="fn">images[1]</td><td class="fv"><a href="https://assets.civicengine.com/uploads/candidate/headshot/406362/thumb_406362.jpg" target="_blank">thumb: thumb_406362.jpg</a></td></tr>
+
+        <tr class="section-divider"><td colspan="2">Person &rarr; Contacts <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">person.contacts[0]</td><td class="fv">email: karakrotheforjudge@gmail.com &middot; type: (null)</td></tr>
+
+        <tr class="section-divider"><td colspan="2">Person &rarr; Degrees <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">degrees[0]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">degree:</span> JD<br><span class="ni-label">school:</span> Indiana University<br><span class="ni-label">gradYear:</span> 2000</div>
+        </td></tr>
+        <tr><td class="fn">degrees[1]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">degree:</span> Bachelor's<br><span class="ni-label">major:</span> Government<br><span class="ni-label">school:</span> Smith College<br><span class="ni-label">gradYear:</span> 1992</div>
+        </td></tr>
+        <tr><td class="fn">degrees[2]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">degree:</span> High School Diploma<br><span class="ni-label">school:</span> Bloomington High School North<br><span class="ni-label">gradYear:</span> 1988</div>
+        </td></tr>
+
+        <tr class="section-divider"><td colspan="2">Person &rarr; Experiences <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">experiences[0]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">title:</span> Court Reporter<br><span class="ni-label">organization:</span> Judge Bridges in Monroe County Circuit Court Division V<br><span class="ni-label">type:</span> employment</div>
+        </td></tr>
+        <tr><td class="fn">experiences[1]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">title:</span> Public Defender<br><span class="ni-label">organization:</span> Monroe County<br><span class="ni-label">type:</span> employment</div>
+        </td></tr>
+        <tr><td class="fn">experiences[2]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">title:</span> Attorney<br><span class="ni-label">organization:</span> Private Practice<br><span class="ni-label">type:</span> employment</div>
+        </td></tr>
+
+        <tr class="section-divider"><td colspan="2">Parties</td></tr>
+        <tr><td class="fn">parties[0].name</td><td class="fv">Democratic</td></tr>
+        <tr><td class="fn">parties[0].shortName <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">D</td></tr>
+
+        <tr class="section-divider"><td colspan="2">Position</td></tr>
+        <tr><td class="fn">position.name</td><td class="fv">Indiana Circuit Court Judge - 10th Circuit (Monroe County), Seat 5</td></tr>
+        <tr><td class="fn">position.description <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">This District or Circuit Court Judge is responsible for adjudicating cases in Civil and Criminal Courts at the trial-level.</td></tr>
+        <tr><td class="fn">position.level</td><td class="fv">STATE</td></tr>
+        <tr><td class="fn">position.appointed</td><td class="fv">false</td></tr>
+        <tr><td class="fn">position.judicial</td><td class="fv">true</td></tr>
+        <tr><td class="fn">position.tier <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">3</td></tr>
+        <tr><td class="fn">position.seats <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">1</td></tr>
+
+        <tr class="section-divider"><td colspan="2">OfficeHolder &rarr; Contacts</td></tr>
+        <tr><td class="fn">contacts[0]</td><td class="fv">phone: 812-349-2615 &middot; type: central</td></tr>
+
+        <tr class="section-divider"><td colspan="2">OfficeHolder &rarr; Addresses</td></tr>
+        <tr><td class="fn">addresses[0]</td><td class="fv">301 N College Ave, Bloomington, IN 47404</td></tr>
+
+        <tr class="section-divider"><td colspan="2">OfficeHolder &rarr; URLs</td></tr>
+        <tr><td class="fn">urls[0]</td><td class="fv"><a href="https://www.instagram.com/karakrothe4judge/" target="_blank">instagram</a></td></tr>
+        <tr><td class="fn">urls[1]</td><td class="fv"><a href="https://www.facebook.com/karakrothe4judge" target="_blank">facebook</a></td></tr>
+        <tr><td class="fn">urls[2]</td><td class="fv"><a href="https://karakrotheforjudge.com/" target="_blank">website</a></td></tr>
+        <tr><td class="fn">urls[3]</td><td class="fv"><a href="https://twitter.com/krothe4judge" target="_blank">twitter</a></td></tr>
+      </table>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 4. PETER J. IVERSEN — Monroe County Council -->
+    <!-- ============================================================ -->
+    <div class="official-card">
+      <div class="card-header">
+        <img src="https://assets.civicengine.com/uploads/candidate/headshot/640899/640899.jpg" alt="Peter J. Iversen">
+        <div class="info">
+          <span class="card-label label-council">County Council</span>
+          <h2>Peter J. Iversen</h2>
+          <p>Monroe County Council - District 1 &middot; Democratic</p>
+        </div>
+      </div>
+      <table>
+        <tr class="section-divider"><td colspan="2">OfficeHolder (top-level)</td></tr>
+        <tr><td class="fn">id</td><td class="fv">Z2lkOi8vYmFsbG90LWZhY3RvcnkvT2ZmaWNlSG9sZGVyLzM2NjYzMg==</td></tr>
+        <tr><td class="fn">databaseId</td><td class="fv">366632</td></tr>
+        <tr><td class="fn">isAppointed</td><td class="fv">false</td></tr>
+        <tr><td class="fn">isCurrent</td><td class="fv">true</td></tr>
+        <tr><td class="fn">isVacant</td><td class="fv">false</td></tr>
+        <tr><td class="fn">startAt</td><td class="fv">2023-01-01</td></tr>
+        <tr><td class="fn">endAt</td><td class="fv">2026-12-31</td></tr>
+        <tr><td class="fn">officeTitle</td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">totalYearsInOffice <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">3</td></tr>
+
+        <tr class="section-divider"><td colspan="2">Person</td></tr>
+        <tr><td class="fn">person.id</td><td class="fv">Z2lkOi8vYmFsbG90LWZhY3RvcnkvQ2FuZGlkYXRlLzY0MDg5OQ==</td></tr>
+        <tr><td class="fn">person.databaseId</td><td class="fv">640899</td></tr>
+        <tr><td class="fn">person.fullName</td><td class="fv">Peter J. Iversen</td></tr>
+        <tr><td class="fn">person.firstName</td><td class="fv">Peter</td></tr>
+        <tr><td class="fn">person.middleName</td><td class="fv">J.</td></tr>
+        <tr><td class="fn">person.lastName</td><td class="fv">Iversen</td></tr>
+        <tr><td class="fn">person.nickname</td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.suffix</td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.bioText <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.bioguideId <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.slug <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">peter-j-iversen</td></tr>
+
+        <tr class="section-divider"><td colspan="2">Person &rarr; Images <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">images[0]</td><td class="fv"><a href="https://assets.civicengine.com/uploads/candidate/headshot/640899/640899.jpg" target="_blank">default: 640899.jpg</a></td></tr>
+        <tr><td class="fn">images[1]</td><td class="fv"><a href="https://assets.civicengine.com/uploads/candidate/headshot/640899/thumb_640899.jpg" target="_blank">thumb: thumb_640899.jpg</a></td></tr>
+
+        <tr class="section-divider"><td colspan="2">Person &rarr; Contacts <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">person.contacts[0]</td><td class="fv">email: peter@peteriversen.org &middot; type: (null)</td></tr>
+
+        <tr class="section-divider"><td colspan="2">Person &rarr; Degrees <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">degrees[0]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">degree:</span> Bachelor's<br><span class="ni-label">major:</span> Political Science and Government<br><span class="ni-label">school:</span> Lawrence University<br><span class="ni-label">gradYear:</span> 2005</div>
+        </td></tr>
+        <tr><td class="fn">degrees[1]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">degree:</span> Master's<br><span class="ni-label">major:</span> Public Affairs<br><span class="ni-label">school:</span> Indiana University<br><span class="ni-label">gradYear:</span> 2021</div>
+        </td></tr>
+
+        <tr class="section-divider"><td colspan="2">Person &rarr; Experiences <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">experiences[0]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">title:</span> Philanthropic Engagement Officer<br><span class="ni-label">organization:</span> Lutheran School of Theology At Chicago<br><span class="ni-label">type:</span> employment<br><span class="ni-label">start:</span> 2022 <span class="ni-label">end:</span> Present</div>
+        </td></tr>
+        <tr><td class="fn">experiences[1]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">title:</span> Development Director<br><span class="ni-label">organization:</span> The Salvation Army<br><span class="ni-label">type:</span> employment<br><span class="ni-label">start:</span> 2012 <span class="ni-label">end:</span> 2016</div>
+        </td></tr>
+        <tr><td class="fn">experiences[2]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">title:</span> Associate Director of Development<br><span class="ni-label">organization:</span> Indiana University School of Public Health<br><span class="ni-label">type:</span> employment<br><span class="ni-label">start:</span> 2017 <span class="ni-label">end:</span> 2022</div>
+        </td></tr>
+        <tr><td class="fn">experiences[3]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">title:</span> Council Member - District 1<br><span class="ni-label">organization:</span> Monroe County<br><span class="ni-label">type:</span> elected_office<br><span class="ni-label">start:</span> 2019 <span class="ni-label">end:</span> Present</div>
+        </td></tr>
+        <tr><td class="fn">experiences[4]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">title:</span> Nursery Assistant<br><span class="ni-label">organization:</span> Backyard Berry Plants<br><span class="ni-label">type:</span> employment<br><span class="ni-label">start:</span> 2016 <span class="ni-label">end:</span> 2016</div>
+        </td></tr>
+        <tr><td class="fn">experiences[5]</td><td class="fv nested">
+          <div class="nested-item"><span class="ni-label">title:</span> Site Supervisor<br><span class="ni-label">organization:</span> Stone Belt Arc, Inc.<br><span class="ni-label">type:</span> employment<br><span class="ni-label">start:</span> 2017 <span class="ni-label">end:</span> 2017</div>
+        </td></tr>
+
+        <tr class="section-divider"><td colspan="2">Person &rarr; URLs</td></tr>
+        <tr><td class="fn">person.urls[0]</td><td class="fv"><a href="https://www.co.monroe.in.us/egov/apps/staff/directory.egov?view=detail;id=700" target="_blank">government</a></td></tr>
+        <tr><td class="fn">person.urls[1]</td><td class="fv"><a href="https://peteriversen.org/" target="_blank">website</a></td></tr>
+        <tr><td class="fn">person.urls[2]</td><td class="fv"><a href="https://twitter.com/peteriversen_" target="_blank">twitter</a></td></tr>
+        <tr><td class="fn">person.urls[3]</td><td class="fv"><a href="https://www.linkedin.com/in/peter-iversen-cfre/" target="_blank">linkedin</a></td></tr>
+        <tr><td class="fn">person.urls[4]</td><td class="fv"><a href="https://www.facebook.com/peteriversenmcc" target="_blank">facebook</a></td></tr>
+
+        <tr class="section-divider"><td colspan="2">Parties</td></tr>
+        <tr><td class="fn">parties[0].name</td><td class="fv">Democratic</td></tr>
+        <tr><td class="fn">parties[0].shortName <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">D</td></tr>
+
+        <tr class="section-divider"><td colspan="2">Position</td></tr>
+        <tr><td class="fn">position.name</td><td class="fv">Monroe County Council - District 1</td></tr>
+        <tr><td class="fn">position.description <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">The County Legislative Fiscal Authority Board is responsible for evaluating the county government's expenditure and tax policy. Typically, the council does not have the ability to set policy, but rather provides advice to the government and public on the economic effects of government budgets and policy proposals.</td></tr>
+        <tr><td class="fn">position.level</td><td class="fv">COUNTY</td></tr>
+        <tr><td class="fn">position.appointed</td><td class="fv">false</td></tr>
+        <tr><td class="fn">position.judicial</td><td class="fv">false</td></tr>
+        <tr><td class="fn">position.tier <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">3</td></tr>
+        <tr><td class="fn">position.seats <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">1</td></tr>
+
+        <tr class="section-divider"><td colspan="2">OfficeHolder &rarr; Contacts</td></tr>
+        <tr><td class="fn">contacts[0]</td><td class="fv">phone: 812-349-7312 &middot; type: office</td></tr>
+        <tr><td class="fn">contacts[1]</td><td class="fv">email: piversen@co.monroe.in.us &middot; type: primary</td></tr>
+
+        <tr class="section-divider"><td colspan="2">OfficeHolder &rarr; Addresses</td></tr>
+        <tr><td class="fn">addresses[0]</td><td class="fv">100 W Kirkwood Ave, Suite 306, Bloomington, IN 47404</td></tr>
+
+        <tr class="section-divider"><td colspan="2">OfficeHolder &rarr; URLs</td></tr>
+        <tr><td class="fn">urls[0]</td><td class="fv"><a href="https://www.linkedin.com/in/peter-iversen-cfre/" target="_blank">linkedin</a></td></tr>
+        <tr><td class="fn">urls[1]</td><td class="fv"><a href="https://www.co.monroe.in.us/council/" target="_blank">website</a></td></tr>
+        <tr><td class="fn">urls[2]</td><td class="fv"><a href="https://www.facebook.com/peteriversenmcc/" target="_blank">facebook</a></td></tr>
+        <tr><td class="fn">urls[3]</td><td class="fv"><a href="https://www.instagram.com/iversen_for_countycouncil/" target="_blank">instagram</a></td></tr>
+        <tr><td class="fn">urls[4]</td><td class="fv"><a href="https://twitter.com/peteriversen_" target="_blank">twitter</a></td></tr>
+      </table>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- FIELD REFERENCE -->
+    <!-- ============================================================ -->
+    <div style="background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);padding:1.5rem;margin-top:1rem;">
+      <h2 style="font-size:1.1rem;font-weight:700;color:#00657c;margin-bottom:0.75rem;">Complete Field Reference</h2>
+      <p style="font-size:0.85rem;color:#666;margin-bottom:1rem;">
+        Every field available from BallotReady GraphQL API. Fields marked <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span> are fetched but <strong>not currently stored</strong> in our database.
+      </p>
+      <table style="font-size:0.82rem;">
+        <tr style="background:#f5f7fa;"><td style="padding:0.4rem 0.8rem;font-weight:700;color:#555;" colspan="3">OfficeHolder (top-level)</td></tr>
+        <tr><td class="fn">id</td><td>String</td><td class="fv">GraphQL relay ID</td></tr>
+        <tr><td class="fn">databaseId</td><td>Int</td><td class="fv">Stored as external_id</td></tr>
+        <tr><td class="fn">isAppointed</td><td>Boolean</td><td class="fv">Available, not stored</td></tr>
+        <tr><td class="fn">isCurrent</td><td>Boolean</td><td class="fv">Always true (filter)</td></tr>
+        <tr><td class="fn">isVacant</td><td>Boolean</td><td class="fv">Available, not stored</td></tr>
+        <tr><td class="fn">startAt</td><td>String</td><td class="fv">Stored as valid_from</td></tr>
+        <tr><td class="fn">endAt</td><td>String</td><td class="fv">Stored as valid_to</td></tr>
+        <tr><td class="fn">officeTitle</td><td>String</td><td class="fv">Stored as office_title</td></tr>
+        <tr><td class="fn">totalYearsInOffice <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td>Int</td><td class="fv">Not stored</td></tr>
+
+        <tr style="background:#f5f7fa;"><td style="padding:0.4rem 0.8rem;font-weight:700;color:#555;" colspan="3">Person</td></tr>
+        <tr><td class="fn">person.firstName</td><td>String</td><td class="fv">Stored</td></tr>
+        <tr><td class="fn">person.middleName</td><td>String</td><td class="fv">First letter stored as middle_initial</td></tr>
+        <tr><td class="fn">person.lastName</td><td>String</td><td class="fv">Stored</td></tr>
+        <tr><td class="fn">person.nickname</td><td>String</td><td class="fv">Stored as preferred_name</td></tr>
+        <tr><td class="fn">person.suffix</td><td>String</td><td class="fv">Stored as name_suffix</td></tr>
+        <tr><td class="fn">person.fullName</td><td>String</td><td class="fv">Reconstructed from parts</td></tr>
+        <tr><td class="fn">person.bioText <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td>String</td><td class="fv">Not stored</td></tr>
+        <tr><td class="fn">person.bioguideId <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td>String</td><td class="fv">Not stored (congress.gov link key)</td></tr>
+        <tr><td class="fn">person.slug <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td>String</td><td class="fv">Not stored</td></tr>
+        <tr><td class="fn">person.images[] <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td>Array</td><td class="fv">Not stored (we use photo_origin_url from Cicero only)</td></tr>
+        <tr><td class="fn">person.contacts[] <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td>Array</td><td class="fv">Separate from officeholder contacts; not stored</td></tr>
+        <tr><td class="fn">person.degrees[] <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td>Array</td><td class="fv">Not stored (degree, major, school, gradYear)</td></tr>
+        <tr><td class="fn">person.experiences[] <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td>Array</td><td class="fv">Not stored (title, organization, type, start, end)</td></tr>
+        <tr><td class="fn">person.urls[]</td><td>Array</td><td class="fv">Stored as urls[]</td></tr>
+
+        <tr style="background:#f5f7fa;"><td style="padding:0.4rem 0.8rem;font-weight:700;color:#555;" colspan="3">Position</td></tr>
+        <tr><td class="fn">position.name</td><td>String</td><td class="fv">Stored as district_label + chamber_name</td></tr>
+        <tr><td class="fn">position.description <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td>String</td><td class="fv">Not stored</td></tr>
+        <tr><td class="fn">position.level</td><td>String</td><td class="fv">Mapped to district_type</td></tr>
+        <tr><td class="fn">position.appointed</td><td>Boolean</td><td class="fv">Used in mapping, not stored directly</td></tr>
+        <tr><td class="fn">position.judicial</td><td>Boolean</td><td class="fv">Used in mapping, not stored directly</td></tr>
+        <tr><td class="fn">position.tier <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td>Int</td><td class="fv">Not stored (1=federal, 2=state, 3=county, 4=local)</td></tr>
+        <tr><td class="fn">position.seats <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td>Int</td><td class="fv">Not stored</td></tr>
+
+        <tr style="background:#f5f7fa;"><td style="padding:0.4rem 0.8rem;font-weight:700;color:#555;" colspan="3">Other</td></tr>
+        <tr><td class="fn">parties[].shortName <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td>String</td><td class="fv">Not stored (R, D, NP, etc.)</td></tr>
+        <tr><td class="fn">contacts[].fax <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td>String</td><td class="fv">Not stored</td></tr>
+        <tr><td class="fn">contacts[].type <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td>String</td><td class="fv">Not stored (central, office, primary, other)</td></tr>
+        <tr><td class="fn">addresses[].type <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td>String</td><td class="fv">Not stored</td></tr>
+        <tr><td class="fn">urls[].type</td><td>String</td><td class="fv">Used to classify identifiers (twitter, facebook, etc.) but not stored</td></tr>
+      </table>
+    </div>
+
+  </main>
+</body>
+</html>
