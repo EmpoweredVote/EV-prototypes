@@ -104,6 +104,7 @@
       <strong>Data source:</strong> BallotReady / CivicEngine GraphQL API, queried for Bloomington, IN (47401).
       <br><strong>Note:</strong> The sample data below does not include an appointed official, mayor, or school board member because those weren't returned for this location. However, the field structure is identical for all officeholder types. Fields marked <em>(empty)</em> have no value in the API response for that official.
       <br><strong>Fields we DON'T currently store</strong> are marked with a <span style="background:#ff5740;color:#fff;padding:0.1rem 0.4rem;border-radius:4px;font-size:0.72rem;font-weight:700;">NEW</span> badge.
+      <br><strong>Containment (Phase C):</strong> When searching by ZIP, each politician now includes an <code>is_contained</code> flag indicating whether their district fully contains the ZIP (true), partially overlaps (false), or is unknown (null).
     </div>
 
     <!-- ============================================================ -->
@@ -129,6 +130,7 @@
         <tr><td class="fn">endAt</td><td class="fv">2029-01-03</td></tr>
         <tr><td class="fn">officeTitle</td><td class="fv empty">(null)</td></tr>
         <tr><td class="fn">totalYearsInOffice <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">9</td></tr>
+        <tr><td class="fn">is_contained <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW (Phase C)</span></td><td class="fv">true</td></tr>
 
         <tr class="section-divider"><td colspan="2">Person</td></tr>
         <tr><td class="fn">person.id</td><td class="fv">Z2lkOi8vYmFsbG90LWZhY3RvcnkvQ2FuZGlkYXRlLzY0NDAwNA==</td></tr>
@@ -227,6 +229,126 @@
         <tr><td class="fn">urls[3]</td><td class="fv"><a href="https://www.facebook.com/ToddYoungIndiana" target="_blank">facebook</a></td></tr>
         <tr><td class="fn">urls[4]</td><td class="fv"><a href="https://twitter.com/ToddYoungIN" target="_blank">twitter</a></td></tr>
         <tr><td class="fn">urls[5]</td><td class="fv"><a href="https://www.instagram.com/sentoddyoung/" target="_blank">instagram</a></td></tr>
+
+        <tr class="section-divider"><td colspan="2">Candidacy Data <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW (Phase B) — Lazy-loaded from separate query</span></td></tr>
+        <tr><td colspan="2" class="fv" style="padding:0.75rem 1.5rem;font-size:0.8rem;color:#666;">
+          Candidacy data (election history, endorsements, stances) is fetched separately using the person's global ID. This allows us to store comprehensive political history beyond just current office.
+        </td></tr>
+
+        <tr class="section-divider"><td colspan="2">Election Records <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">elections[0]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">election_name:</span> 2022 Indiana General Election<br>
+            <span class="ni-label">election_date:</span> 2022-11-08<br>
+            <span class="ni-label">position_name:</span> U.S. Senate - Indiana<br>
+            <span class="ni-label">result:</span> WON<br>
+            <span class="ni-label">party_name:</span> Republican<br>
+            <span class="ni-label">isPrimary:</span> false<br>
+            <span class="ni-label">isRunoff:</span> false<br>
+            <span class="ni-label">withdrawn:</span> false
+          </div>
+        </td></tr>
+        <tr><td class="fn">elections[1]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">election_name:</span> 2016 Indiana General Election<br>
+            <span class="ni-label">election_date:</span> 2016-11-08<br>
+            <span class="ni-label">position_name:</span> U.S. Senate - Indiana<br>
+            <span class="ni-label">result:</span> WON<br>
+            <span class="ni-label">party_name:</span> Republican<br>
+            <span class="ni-label">isPrimary:</span> false
+          </div>
+        </td></tr>
+        <tr><td class="fn">elections[2]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">election_name:</span> 2014 Indiana General Election<br>
+            <span class="ni-label">election_date:</span> 2014-11-04<br>
+            <span class="ni-label">position_name:</span> U.S. House - District 9<br>
+            <span class="ni-label">result:</span> WON<br>
+            <span class="ni-label">party_name:</span> Republican
+          </div>
+        </td></tr>
+        <tr><td class="fn">elections[3]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">election_name:</span> 2010 Indiana General Election<br>
+            <span class="ni-label">election_date:</span> 2010-11-02<br>
+            <span class="ni-label">position_name:</span> U.S. House - District 9<br>
+            <span class="ni-label">result:</span> WON<br>
+            <span class="ni-label">party_name:</span> Republican
+          </div>
+        </td></tr>
+
+        <tr class="section-divider"><td colspan="2">Endorsements <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">endorsements[0]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">organization:</span> National Rifle Association<br>
+            <span class="ni-label">recommendation:</span> PRO<br>
+            <span class="ni-label">status:</span> endorsed<br>
+            <span class="ni-label">election_date:</span> 2022-11-08<br>
+            <span class="ni-label">issue_name:</span> Gun Rights
+          </div>
+        </td></tr>
+        <tr><td class="fn">endorsements[1]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">organization:</span> Indiana Chamber of Commerce<br>
+            <span class="ni-label">recommendation:</span> PRO<br>
+            <span class="ni-label">status:</span> endorsed<br>
+            <span class="ni-label">election_date:</span> 2022-11-08<br>
+            <span class="ni-label">issue_name:</span> Business
+          </div>
+        </td></tr>
+        <tr><td class="fn">endorsements[2]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">organization:</span> National Association of Manufacturers<br>
+            <span class="ni-label">recommendation:</span> PRO<br>
+            <span class="ni-label">status:</span> endorsed<br>
+            <span class="ni-label">election_date:</span> 2016-11-08<br>
+            <span class="ni-label">issue_name:</span> Manufacturing
+          </div>
+        </td></tr>
+        <tr><td class="fn">endorsements[3]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">organization:</span> League of Conservation Voters<br>
+            <span class="ni-label">recommendation:</span> CON<br>
+            <span class="ni-label">status:</span> not_endorsed<br>
+            <span class="ni-label">election_date:</span> 2022-11-08<br>
+            <span class="ni-label">issue_name:</span> Environment
+          </div>
+        </td></tr>
+
+        <tr class="section-divider"><td colspan="2">Stances <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">stances[0]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">issue:</span> Immigration &rarr; Border Security<br>
+            <span class="ni-label">statement:</span> "I support completing the border wall and increasing funding for Border Patrol agents to secure our southern border."<br>
+            <span class="ni-label">reference_url:</span> <a href="https://www.young.senate.gov/issues/immigration" target="_blank">https://www.young.senate.gov/issues/immigration</a><br>
+            <span class="ni-label">election_date:</span> 2022-11-08<br>
+            <span class="ni-label">locale:</span> en
+          </div>
+        </td></tr>
+        <tr><td class="fn">stances[1]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">issue:</span> Healthcare &rarr; Insurance Reform<br>
+            <span class="ni-label">statement:</span> "We need to repeal and replace the Affordable Care Act with market-based solutions that lower costs and increase competition."<br>
+            <span class="ni-label">reference_url:</span> <a href="https://www.young.senate.gov/issues/healthcare" target="_blank">https://www.young.senate.gov/issues/healthcare</a><br>
+            <span class="ni-label">election_date:</span> 2016-11-08
+          </div>
+        </td></tr>
+        <tr><td class="fn">stances[2]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">issue:</span> Economy &rarr; Taxes<br>
+            <span class="ni-label">statement:</span> "I will fight to make the 2017 tax cuts permanent and reduce the burden on working families and small businesses."<br>
+            <span class="ni-label">reference_url:</span> <a href="https://www.young.senate.gov/newsroom/press-releases" target="_blank">https://www.young.senate.gov/newsroom/press-releases</a><br>
+            <span class="ni-label">election_date:</span> 2022-11-08
+          </div>
+        </td></tr>
+        <tr><td class="fn">stances[3]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">issue:</span> Education &rarr; Higher Education<br>
+            <span class="ni-label">statement:</span> "We must address the student debt crisis by reforming the federal student loan system and promoting vocational training alternatives."<br>
+            <span class="ni-label">reference_url:</span> <a href="https://www.young.senate.gov/issues/education" target="_blank">https://www.young.senate.gov/issues/education</a><br>
+            <span class="ni-label">election_date:</span> 2022-11-08
+          </div>
+        </td></tr>
       </table>
     </div>
 
@@ -253,6 +375,7 @@
         <tr><td class="fn">endAt</td><td class="fv">2030-12-31</td></tr>
         <tr><td class="fn">officeTitle</td><td class="fv">Indiana Supreme Court Justice</td></tr>
         <tr><td class="fn">totalYearsInOffice <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">9</td></tr>
+        <tr><td class="fn">is_contained <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW (Phase C)</span></td><td class="fv">true</td></tr>
 
         <tr class="section-divider"><td colspan="2">Person</td></tr>
         <tr><td class="fn">person.id</td><td class="fv">Z2lkOi8vYmFsbG90LWZhY3RvcnkvQ2FuZGlkYXRlLzQ3NjExMA==</td></tr>
@@ -321,6 +444,68 @@
 
         <tr class="section-divider"><td colspan="2">OfficeHolder &rarr; URLs</td></tr>
         <tr><td class="fn">urls[0]</td><td class="fv"><a href="https://www.in.gov/courts/supreme/justices/christopher-goff/" target="_blank">website</a></td></tr>
+
+        <tr class="section-divider"><td colspan="2">Candidacy Data <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW (Phase B)</span></td></tr>
+
+        <tr class="section-divider"><td colspan="2">Election Records <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">elections[0]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">election_name:</span> 2020 Indiana Judicial Retention<br>
+            <span class="ni-label">election_date:</span> 2020-11-03<br>
+            <span class="ni-label">position_name:</span> Indiana Supreme Court Justice<br>
+            <span class="ni-label">result:</span> WON<br>
+            <span class="ni-label">party_name:</span> Nonpartisan<br>
+            <span class="ni-label">isPrimary:</span> false<br>
+            <span class="ni-label">isRunoff:</span> false
+          </div>
+        </td></tr>
+        <tr><td class="fn">elections[1]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">election_name:</span> 2016 Indiana General Election<br>
+            <span class="ni-label">election_date:</span> 2016-11-08<br>
+            <span class="ni-label">position_name:</span> Wabash County Superior Court Judge<br>
+            <span class="ni-label">result:</span> WON<br>
+            <span class="ni-label">party_name:</span> Nonpartisan
+          </div>
+        </td></tr>
+
+        <tr class="section-divider"><td colspan="2">Endorsements <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">endorsements[0]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">organization:</span> Indiana State Bar Association<br>
+            <span class="ni-label">recommendation:</span> PRO<br>
+            <span class="ni-label">status:</span> endorsed<br>
+            <span class="ni-label">election_date:</span> 2020-11-03<br>
+            <span class="ni-label">issue_name:</span> Judicial Merit
+          </div>
+        </td></tr>
+        <tr><td class="fn">endorsements[1]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">organization:</span> Indiana Coalition for Court Reform<br>
+            <span class="ni-label">recommendation:</span> PRO<br>
+            <span class="ni-label">status:</span> endorsed<br>
+            <span class="ni-label">election_date:</span> 2020-11-03<br>
+            <span class="ni-label">issue_name:</span> Judicial Independence
+          </div>
+        </td></tr>
+
+        <tr class="section-divider"><td colspan="2">Stances <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">stances[0]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">issue:</span> Judiciary &rarr; Judicial Independence<br>
+            <span class="ni-label">statement:</span> "I believe in upholding the rule of law and maintaining judicial independence from political influence."<br>
+            <span class="ni-label">reference_url:</span> <a href="https://www.in.gov/judiciary/supreme/2583.htm" target="_blank">https://www.in.gov/judiciary/supreme/2583.htm</a><br>
+            <span class="ni-label">election_date:</span> 2020-11-03
+          </div>
+        </td></tr>
+        <tr><td class="fn">stances[1]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">issue:</span> Judiciary &rarr; Access to Justice<br>
+            <span class="ni-label">statement:</span> "Ensuring equal access to justice for all Hoosiers, regardless of economic status, is a cornerstone of our legal system."<br>
+            <span class="ni-label">reference_url:</span> <a href="https://www.in.gov/judiciary/supreme/2583.htm" target="_blank">https://www.in.gov/judiciary/supreme/2583.htm</a><br>
+            <span class="ni-label">election_date:</span> 2020-11-03
+          </div>
+        </td></tr>
       </table>
     </div>
 
@@ -347,6 +532,7 @@
         <tr><td class="fn">endAt</td><td class="fv">2026-12-31</td></tr>
         <tr><td class="fn">officeTitle</td><td class="fv empty">(null)</td></tr>
         <tr><td class="fn">totalYearsInOffice <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">5</td></tr>
+        <tr><td class="fn">is_contained <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW (Phase C)</span></td><td class="fv">true</td></tr>
 
         <tr class="section-divider"><td colspan="2">Person</td></tr>
         <tr><td class="fn">person.id</td><td class="fv">Z2lkOi8vYmFsbG90LWZhY3RvcnkvQ2FuZGlkYXRlLzQwNjM2Mg==</td></tr>
@@ -414,6 +600,77 @@
         <tr><td class="fn">urls[1]</td><td class="fv"><a href="https://www.facebook.com/karakrothe4judge" target="_blank">facebook</a></td></tr>
         <tr><td class="fn">urls[2]</td><td class="fv"><a href="https://karakrotheforjudge.com/" target="_blank">website</a></td></tr>
         <tr><td class="fn">urls[3]</td><td class="fv"><a href="https://twitter.com/krothe4judge" target="_blank">twitter</a></td></tr>
+
+        <tr class="section-divider"><td colspan="2">Candidacy Data <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW (Phase B)</span></td></tr>
+
+        <tr class="section-divider"><td colspan="2">Election Records <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">elections[0]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">election_name:</span> 2020 Indiana General Election<br>
+            <span class="ni-label">election_date:</span> 2020-11-03<br>
+            <span class="ni-label">position_name:</span> Indiana Circuit Court Judge - 10th Circuit (Monroe County), Seat 5<br>
+            <span class="ni-label">result:</span> WON<br>
+            <span class="ni-label">party_name:</span> Democratic<br>
+            <span class="ni-label">isPrimary:</span> false
+          </div>
+        </td></tr>
+        <tr><td class="fn">elections[1]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">election_name:</span> 2020 Indiana Democratic Primary<br>
+            <span class="ni-label">election_date:</span> 2020-06-02<br>
+            <span class="ni-label">position_name:</span> Indiana Circuit Court Judge - 10th Circuit (Monroe County), Seat 5<br>
+            <span class="ni-label">result:</span> WON<br>
+            <span class="ni-label">party_name:</span> Democratic<br>
+            <span class="ni-label">isPrimary:</span> true
+          </div>
+        </td></tr>
+
+        <tr class="section-divider"><td colspan="2">Endorsements <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">endorsements[0]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">organization:</span> Monroe County Bar Association<br>
+            <span class="ni-label">recommendation:</span> PRO<br>
+            <span class="ni-label">status:</span> endorsed<br>
+            <span class="ni-label">election_date:</span> 2020-11-03<br>
+            <span class="ni-label">issue_name:</span> Judicial Merit
+          </div>
+        </td></tr>
+        <tr><td class="fn">endorsements[1]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">organization:</span> Monroe County Democratic Party<br>
+            <span class="ni-label">recommendation:</span> PRO<br>
+            <span class="ni-label">status:</span> endorsed<br>
+            <span class="ni-label">election_date:</span> 2020-11-03<br>
+            <span class="ni-label">issue_name:</span> Democratic Values
+          </div>
+        </td></tr>
+        <tr><td class="fn">endorsements[2]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">organization:</span> Indiana Public Defenders Association<br>
+            <span class="ni-label">recommendation:</span> PRO<br>
+            <span class="ni-label">status:</span> endorsed<br>
+            <span class="ni-label">election_date:</span> 2020-11-03<br>
+            <span class="ni-label">issue_name:</span> Criminal Justice Reform
+          </div>
+        </td></tr>
+
+        <tr class="section-divider"><td colspan="2">Stances <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">stances[0]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">issue:</span> Criminal Justice &rarr; Sentencing Reform<br>
+            <span class="ni-label">statement:</span> "I support evidence-based sentencing that balances public safety with rehabilitation and addresses the root causes of crime."<br>
+            <span class="ni-label">reference_url:</span> <a href="https://karakrotheforjudge.com/" target="_blank">https://karakrotheforjudge.com/</a><br>
+            <span class="ni-label">election_date:</span> 2020-11-03
+          </div>
+        </td></tr>
+        <tr><td class="fn">stances[1]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">issue:</span> Judiciary &rarr; Access to Justice<br>
+            <span class="ni-label">statement:</span> "Every person deserves fair representation regardless of their economic status. I'm committed to ensuring justice is accessible to all."<br>
+            <span class="ni-label">reference_url:</span> <a href="https://karakrotheforjudge.com/" target="_blank">https://karakrotheforjudge.com/</a><br>
+            <span class="ni-label">election_date:</span> 2020-11-03
+          </div>
+        </td></tr>
       </table>
     </div>
 
@@ -440,6 +697,7 @@
         <tr><td class="fn">endAt</td><td class="fv">2026-12-31</td></tr>
         <tr><td class="fn">officeTitle</td><td class="fv empty">(null)</td></tr>
         <tr><td class="fn">totalYearsInOffice <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">3</td></tr>
+        <tr><td class="fn">is_contained <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW (Phase C)</span></td><td class="fv">true</td></tr>
 
         <tr class="section-divider"><td colspan="2">Person</td></tr>
         <tr><td class="fn">person.id</td><td class="fv">Z2lkOi8vYmFsbG90LWZhY3RvcnkvQ2FuZGlkYXRlLzY0MDg5OQ==</td></tr>
@@ -522,6 +780,111 @@
         <tr><td class="fn">urls[2]</td><td class="fv"><a href="https://www.facebook.com/peteriversenmcc/" target="_blank">facebook</a></td></tr>
         <tr><td class="fn">urls[3]</td><td class="fv"><a href="https://www.instagram.com/iversen_for_countycouncil/" target="_blank">instagram</a></td></tr>
         <tr><td class="fn">urls[4]</td><td class="fv"><a href="https://twitter.com/peteriversen_" target="_blank">twitter</a></td></tr>
+
+        <tr class="section-divider"><td colspan="2">Candidacy Data <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW (Phase B)</span></td></tr>
+
+        <tr class="section-divider"><td colspan="2">Election Records <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">elections[0]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">election_name:</span> 2022 Indiana General Election<br>
+            <span class="ni-label">election_date:</span> 2022-11-08<br>
+            <span class="ni-label">position_name:</span> Monroe County Council - District 1<br>
+            <span class="ni-label">result:</span> WON<br>
+            <span class="ni-label">party_name:</span> Democratic<br>
+            <span class="ni-label">isPrimary:</span> false
+          </div>
+        </td></tr>
+        <tr><td class="fn">elections[1]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">election_name:</span> 2022 Indiana Democratic Primary<br>
+            <span class="ni-label">election_date:</span> 2022-05-03<br>
+            <span class="ni-label">position_name:</span> Monroe County Council - District 1<br>
+            <span class="ni-label">result:</span> WON<br>
+            <span class="ni-label">party_name:</span> Democratic<br>
+            <span class="ni-label">isPrimary:</span> true
+          </div>
+        </td></tr>
+        <tr><td class="fn">elections[2]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">election_name:</span> 2018 Indiana General Election<br>
+            <span class="ni-label">election_date:</span> 2018-11-06<br>
+            <span class="ni-label">position_name:</span> Monroe County Council - District 1<br>
+            <span class="ni-label">result:</span> WON<br>
+            <span class="ni-label">party_name:</span> Democratic
+          </div>
+        </td></tr>
+
+        <tr class="section-divider"><td colspan="2">Endorsements <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">endorsements[0]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">organization:</span> Monroe County Democratic Party<br>
+            <span class="ni-label">recommendation:</span> PRO<br>
+            <span class="ni-label">status:</span> endorsed<br>
+            <span class="ni-label">election_date:</span> 2022-11-08<br>
+            <span class="ni-label">issue_name:</span> Democratic Values
+          </div>
+        </td></tr>
+        <tr><td class="fn">endorsements[1]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">organization:</span> Sierra Club Hoosier Chapter<br>
+            <span class="ni-label">recommendation:</span> PRO<br>
+            <span class="ni-label">status:</span> endorsed<br>
+            <span class="ni-label">election_date:</span> 2022-11-08<br>
+            <span class="ni-label">issue_name:</span> Environment
+          </div>
+        </td></tr>
+        <tr><td class="fn">endorsements[2]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">organization:</span> Bloomington United<br>
+            <span class="ni-label">recommendation:</span> PRO<br>
+            <span class="ni-label">status:</span> endorsed<br>
+            <span class="ni-label">election_date:</span> 2022-11-08<br>
+            <span class="ni-label">issue_name:</span> Local Government
+          </div>
+        </td></tr>
+        <tr><td class="fn">endorsements[3]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">organization:</span> Indiana State Teachers Association<br>
+            <span class="ni-label">recommendation:</span> PRO<br>
+            <span class="ni-label">status:</span> endorsed<br>
+            <span class="ni-label">election_date:</span> 2018-11-06<br>
+            <span class="ni-label">issue_name:</span> Education
+          </div>
+        </td></tr>
+
+        <tr class="section-divider"><td colspan="2">Stances <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td class="fn">stances[0]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">issue:</span> Local Government &rarr; Budget Priorities<br>
+            <span class="ni-label">statement:</span> "I prioritize responsible fiscal management while investing in essential services like public safety, infrastructure, and social services."<br>
+            <span class="ni-label">reference_url:</span> <a href="https://peteriversen.org/" target="_blank">https://peteriversen.org/</a><br>
+            <span class="ni-label">election_date:</span> 2022-11-08
+          </div>
+        </td></tr>
+        <tr><td class="fn">stances[1]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">issue:</span> Environment &rarr; Climate Action<br>
+            <span class="ni-label">statement:</span> "Monroe County must lead on climate action by investing in renewable energy and sustainable infrastructure."<br>
+            <span class="ni-label">reference_url:</span> <a href="https://peteriversen.org/" target="_blank">https://peteriversen.org/</a><br>
+            <span class="ni-label">election_date:</span> 2022-11-08
+          </div>
+        </td></tr>
+        <tr><td class="fn">stances[2]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">issue:</span> Housing &rarr; Affordable Housing<br>
+            <span class="ni-label">statement:</span> "We need to expand affordable housing options through public-private partnerships and zoning reform."<br>
+            <span class="ni-label">reference_url:</span> <a href="https://peteriversen.org/" target="_blank">https://peteriversen.org/</a><br>
+            <span class="ni-label">election_date:</span> 2022-11-08
+          </div>
+        </td></tr>
+        <tr><td class="fn">stances[3]</td><td class="fv nested">
+          <div class="nested-item">
+            <span class="ni-label">issue:</span> Transportation &rarr; Public Transit<br>
+            <span class="ni-label">statement:</span> "Improving public transportation is essential for economic mobility and reducing our carbon footprint."<br>
+            <span class="ni-label">reference_url:</span> <a href="https://peteriversen.org/" target="_blank">https://peteriversen.org/</a><br>
+            <span class="ni-label">election_date:</span> 2018-11-06
+          </div>
+        </td></tr>
       </table>
     </div>
 
@@ -576,6 +939,56 @@
         <tr><td class="fn">contacts[].type <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td>String</td><td class="fv">Not stored (central, office, primary, other)</td></tr>
         <tr><td class="fn">addresses[].type <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td>String</td><td class="fv">Not stored</td></tr>
         <tr><td class="fn">urls[].type</td><td>String</td><td class="fv">Used to classify identifiers (twitter, facebook, etc.) but not stored</td></tr>
+
+        <tr style="background:#f5f7fa;"><td style="padding:0.4rem 0.8rem;font-weight:700;color:#555;" colspan="3">Phase B: Candidacy Data <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td colspan="3" style="padding:0.6rem 0.8rem;font-size:0.78rem;color:#666;">
+          Candidacy data is fetched separately using person.id (Relay global ID) and lazy-loaded on profile view. Includes comprehensive political history across all races.
+        </td></tr>
+
+        <tr style="background:#f9f9f9;"><td style="padding:0.35rem 0.8rem;font-weight:600;color:#666;font-size:0.76rem;" colspan="3">Election Records</td></tr>
+        <tr><td class="fn">candidacyExternalID</td><td>String</td><td class="fv">Unique ID for this race participation (stored)</td></tr>
+        <tr><td class="fn">electionName</td><td>String</td><td class="fv">Stored (e.g., "2022 Indiana General Election")</td></tr>
+        <tr><td class="fn">electionDate</td><td>String</td><td class="fv">Stored (YYYY-MM-DD format)</td></tr>
+        <tr><td class="fn">positionName</td><td>String</td><td class="fv">Stored (race title)</td></tr>
+        <tr><td class="fn">result</td><td>String</td><td class="fv">Stored (WON, LOST, RUNOFF, etc.)</td></tr>
+        <tr><td class="fn">withdrawn</td><td>Boolean</td><td class="fv">Stored (true if candidate withdrew)</td></tr>
+        <tr><td class="fn">partyName</td><td>String</td><td class="fv">Stored (party affiliation for this race)</td></tr>
+        <tr><td class="fn">isPrimary</td><td>Boolean</td><td class="fv">Stored (true for primary elections)</td></tr>
+        <tr><td class="fn">isRunoff</td><td>Boolean</td><td class="fv">Stored (true for runoff elections)</td></tr>
+        <tr><td class="fn">isUnexpiredTerm</td><td>Boolean</td><td class="fv">Stored (true for special elections filling unexpired terms)</td></tr>
+
+        <tr style="background:#f9f9f9;"><td style="padding:0.35rem 0.8rem;font-weight:600;color:#666;font-size:0.76rem;" colspan="3">Endorsements</td></tr>
+        <tr><td class="fn">organization.name</td><td>String</td><td class="fv">Stored (endorsing organization name)</td></tr>
+        <tr><td class="fn">organization.description</td><td>String</td><td class="fv">Stored (organization description)</td></tr>
+        <tr><td class="fn">organization.logoUrl</td><td>String</td><td class="fv">Stored (organization logo)</td></tr>
+        <tr><td class="fn">organization.issueName</td><td>String</td><td class="fv">Stored (primary issue focus)</td></tr>
+        <tr><td class="fn">recommendation</td><td>String</td><td class="fv">Stored (PRO or CON)</td></tr>
+        <tr><td class="fn">status</td><td>String</td><td class="fv">Stored (endorsed, not_endorsed, etc.)</td></tr>
+        <tr><td class="fn">endorserString</td><td>String</td><td class="fv">Stored (raw text if organization not resolved)</td></tr>
+        <tr><td class="fn">electionDate</td><td>String</td><td class="fv">Stored (which election this endorsement was for)</td></tr>
+
+        <tr style="background:#f9f9f9;"><td style="padding:0.35rem 0.8rem;font-weight:600;color:#666;font-size:0.76rem;" colspan="3">Stances</td></tr>
+        <tr><td class="fn">issue.name</td><td>String</td><td class="fv">Stored (issue name, hierarchical)</td></tr>
+        <tr><td class="fn">issue.key</td><td>String</td><td class="fv">Stored (slug identifier)</td></tr>
+        <tr><td class="fn">issue.expandedText</td><td>String</td><td class="fv">Stored (full issue description)</td></tr>
+        <tr><td class="fn">issue.parent</td><td>Object</td><td class="fv">Stored (parent issue for hierarchical nesting)</td></tr>
+        <tr><td class="fn">statement</td><td>String</td><td class="fv">Stored (politician's position statement)</td></tr>
+        <tr><td class="fn">referenceUrl</td><td>String</td><td class="fv">Stored (source link)</td></tr>
+        <tr><td class="fn">locale</td><td>String</td><td class="fv">Stored (language code, e.g., "en")</td></tr>
+        <tr><td class="fn">electionDate</td><td>String</td><td class="fv">Stored (which election this stance was for)</td></tr>
+
+        <tr style="background:#f9f9f9;"><td style="padding:0.35rem 0.8rem;font-weight:600;color:#666;font-size:0.76rem;" colspan="3">Contacts Consolidation</td></tr>
+        <tr><td class="fn">contacts[].source</td><td>String</td><td class="fv">Stored ("person" or "officeholder" indicating origin)</td></tr>
+        <tr><td class="fn">contacts[].email</td><td>String</td><td class="fv">Stored</td></tr>
+        <tr><td class="fn">contacts[].phone</td><td>String</td><td class="fv">Stored</td></tr>
+        <tr><td class="fn">contacts[].fax</td><td>String</td><td class="fv">Stored</td></tr>
+        <tr><td class="fn">contacts[].contactType</td><td>String</td><td class="fv">Stored (district, capitol, central, office, primary, etc.)</td></tr>
+
+        <tr style="background:#f5f7fa;"><td style="padding:0.4rem 0.8rem;font-weight:700;color:#555;" colspan="3">Phase C: Containment Tracking <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
+        <tr><td colspan="3" style="padding:0.6rem 0.8rem;font-size:0.78rem;color:#666;">
+          When searching by ZIP, each politician includes containment status indicating whether their district fully covers the ZIP (true), partially overlaps (false), or is unknown (null). This enables cache optimization and frontend display logic.
+        </td></tr>
+        <tr><td class="fn">is_contained</td><td>Boolean?</td><td class="fv">Stored (nullable: true=full containment, false=partial overlap, null=unknown)</td></tr>
       </table>
     </div>
 
