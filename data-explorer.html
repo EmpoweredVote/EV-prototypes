@@ -87,6 +87,7 @@
       padding: 0.6rem 0.8rem; margin-bottom: 0.4rem; font-size: 0.78rem;
     }
     .nested-item .ni-label { font-weight: 600; color: #555; display: inline-block; min-width: 120px; }
+    .field-desc { font-size: 0.7rem; color: #999; font-weight: 400; display: block; margin-top: 0.15rem; line-height: 1.3; white-space: normal; }
   </style>
 </head>
 <body>
@@ -129,8 +130,8 @@
         <tr><td class="fn">startAt</td><td class="fv">2023-01-03</td></tr>
         <tr><td class="fn">endAt</td><td class="fv">2029-01-03</td></tr>
         <tr><td class="fn">officeTitle</td><td class="fv empty">(null)</td></tr>
-        <tr><td class="fn">totalYearsInOffice <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">9</td></tr>
-        <tr><td class="fn">is_contained <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW (Phase C)</span></td><td class="fv">true</td></tr>
+        <tr><td class="fn">totalYearsInOffice <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Total cumulative years this person has served in office (current + previous positions)</span></td><td class="fv">9</td></tr>
+        <tr><td class="fn">is_contained <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW (Phase C)</span><span class="field-desc">Whether this position's district fully contains the searched ZIP code (true=full, false=partial, null=unknown)</span></td><td class="fv">true</td></tr>
 
         <tr class="section-divider"><td colspan="2">Person</td></tr>
         <tr><td class="fn">person.id</td><td class="fv">Z2lkOi8vYmFsbG90LWZhY3RvcnkvQ2FuZGlkYXRlLzY0NDAwNA==</td></tr>
@@ -141,9 +142,9 @@
         <tr><td class="fn">person.lastName</td><td class="fv">Young</td></tr>
         <tr><td class="fn">person.nickname</td><td class="fv empty">(null)</td></tr>
         <tr><td class="fn">person.suffix</td><td class="fv empty">(null)</td></tr>
-        <tr><td class="fn">person.bioText <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv empty">(null)</td></tr>
-        <tr><td class="fn">person.bioguideId <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">Y000064</td></tr>
-        <tr><td class="fn">person.slug <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">todd-young</td></tr>
+        <tr><td class="fn">person.bioText <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Biography or description text for this person</span></td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.bioguideId <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Bioguide ID for federal officials (links to congress.gov biographical directory)</span></td><td class="fv">Y000064</td></tr>
+        <tr><td class="fn">person.slug <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">URL-friendly identifier (e.g., for constructing profile page URLs)</span></td><td class="fv">todd-young</td></tr>
 
         <tr class="section-divider"><td colspan="2">Person &rarr; Images <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
         <tr><td class="fn">images[0]</td><td class="fv"><a href="https://assets.civicengine.com/uploads/candidate/headshot/644004/644004.jpg" target="_blank">default: 644004.jpg</a></td></tr>
@@ -201,17 +202,17 @@
 
         <tr class="section-divider"><td colspan="2">Parties</td></tr>
         <tr><td class="fn">parties[0].name</td><td class="fv">Republican</td></tr>
-        <tr><td class="fn">parties[0].shortName <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">R</td></tr>
+        <tr><td class="fn">parties[0].shortName <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Abbreviated party name (R, D, NP, etc.)</span></td><td class="fv">R</td></tr>
 
         <tr class="section-divider"><td colspan="2">Position</td></tr>
         <tr><td class="fn">position.id</td><td class="fv">Z2lkOi8vYmFsbG90LWZhY3RvcnkvUG9zaXRpb24vNDYxNzQ=</td></tr>
         <tr><td class="fn">position.name</td><td class="fv">U.S. Senate - Indiana</td></tr>
-        <tr><td class="fn">position.description <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">The U.S. Senate is one of two chambers of the federal legislature. Senators are responsible for writing and passing legislation, approving presidential appointments, and ratifying treaties with foreign countries.</td></tr>
+        <tr><td class="fn">position.description <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Description of what this position/role does and its responsibilities</span></td><td class="fv">The U.S. Senate is one of two chambers of the federal legislature. Senators are responsible for writing and passing legislation, approving presidential appointments, and ratifying treaties with foreign countries.</td></tr>
         <tr><td class="fn">position.level</td><td class="fv">FEDERAL</td></tr>
         <tr><td class="fn">position.appointed</td><td class="fv">false</td></tr>
         <tr><td class="fn">position.judicial</td><td class="fv">false</td></tr>
-        <tr><td class="fn">position.tier <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">1</td></tr>
-        <tr><td class="fn">position.seats <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">1</td></tr>
+        <tr><td class="fn">position.tier <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Importance tier (1=federal, 2=state, 3=county, 4=local)</span></td><td class="fv">1</td></tr>
+        <tr><td class="fn">position.seats <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Number of seats available for this position</span></td><td class="fv">1</td></tr>
 
         <tr class="section-divider"><td colspan="2">OfficeHolder &rarr; Contacts</td></tr>
         <tr><td class="fn">contacts[0]</td><td class="fv">phone: 202-224-5623 &middot; type: central</td></tr>
@@ -374,8 +375,8 @@
         <tr><td class="fn">startAt</td><td class="fv">2021-01-01</td></tr>
         <tr><td class="fn">endAt</td><td class="fv">2030-12-31</td></tr>
         <tr><td class="fn">officeTitle</td><td class="fv">Indiana Supreme Court Justice</td></tr>
-        <tr><td class="fn">totalYearsInOffice <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">9</td></tr>
-        <tr><td class="fn">is_contained <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW (Phase C)</span></td><td class="fv">true</td></tr>
+        <tr><td class="fn">totalYearsInOffice <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Total cumulative years this person has served in office (current + previous positions)</span></td><td class="fv">9</td></tr>
+        <tr><td class="fn">is_contained <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW (Phase C)</span><span class="field-desc">Whether this position's district fully contains the searched ZIP code (true=full, false=partial, null=unknown)</span></td><td class="fv">true</td></tr>
 
         <tr class="section-divider"><td colspan="2">Person</td></tr>
         <tr><td class="fn">person.id</td><td class="fv">Z2lkOi8vYmFsbG90LWZhY3RvcnkvQ2FuZGlkYXRlLzQ3NjExMA==</td></tr>
@@ -386,9 +387,9 @@
         <tr><td class="fn">person.lastName</td><td class="fv">Goff</td></tr>
         <tr><td class="fn">person.nickname</td><td class="fv empty">(null)</td></tr>
         <tr><td class="fn">person.suffix</td><td class="fv empty">(null)</td></tr>
-        <tr><td class="fn">person.bioText <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv empty">(null)</td></tr>
-        <tr><td class="fn">person.bioguideId <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv empty">(null)</td></tr>
-        <tr><td class="fn">person.slug <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">christopher-m-goff</td></tr>
+        <tr><td class="fn">person.bioText <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Biography or description text for this person</span></td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.bioguideId <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Bioguide ID for federal officials (links to congress.gov biographical directory)</span></td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.slug <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">URL-friendly identifier (e.g., for constructing profile page URLs)</span></td><td class="fv">christopher-m-goff</td></tr>
 
         <tr class="section-divider"><td colspan="2">Person &rarr; Images <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
         <tr><td class="fn">images[0]</td><td class="fv"><a href="https://assets.civicengine.com/uploads/candidate/headshot/476110/476110.jpg" target="_blank">default: 476110.jpg</a></td></tr>
@@ -425,16 +426,16 @@
 
         <tr class="section-divider"><td colspan="2">Parties</td></tr>
         <tr><td class="fn">parties[0].name</td><td class="fv">Nonpartisan</td></tr>
-        <tr><td class="fn">parties[0].shortName <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">NP</td></tr>
+        <tr><td class="fn">parties[0].shortName <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Abbreviated party name (R, D, NP, etc.)</span></td><td class="fv">NP</td></tr>
 
         <tr class="section-divider"><td colspan="2">Position</td></tr>
         <tr><td class="fn">position.name</td><td class="fv">Indiana Supreme Court Justice (Retain Goff?)</td></tr>
-        <tr><td class="fn">position.description <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">The State Supreme Court is responsible for final appeals. Judges in this position are seeking to retain their current seat.</td></tr>
+        <tr><td class="fn">position.description <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Description of what this position/role does and its responsibilities</span></td><td class="fv">The State Supreme Court is responsible for final appeals. Judges in this position are seeking to retain their current seat.</td></tr>
         <tr><td class="fn">position.level</td><td class="fv">STATE</td></tr>
         <tr><td class="fn">position.appointed</td><td class="fv">false</td></tr>
         <tr><td class="fn">position.judicial</td><td class="fv">true</td></tr>
-        <tr><td class="fn">position.tier <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">2</td></tr>
-        <tr><td class="fn">position.seats <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">1</td></tr>
+        <tr><td class="fn">position.tier <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Importance tier (1=federal, 2=state, 3=county, 4=local)</span></td><td class="fv">2</td></tr>
+        <tr><td class="fn">position.seats <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Number of seats available for this position</span></td><td class="fv">1</td></tr>
 
         <tr class="section-divider"><td colspan="2">OfficeHolder &rarr; Contacts</td></tr>
         <tr><td class="fn">contacts[0]</td><td class="fv">phone: 317-232-2546 &middot; type: central</td></tr>
@@ -531,8 +532,8 @@
         <tr><td class="fn">startAt</td><td class="fv">2021-01-01</td></tr>
         <tr><td class="fn">endAt</td><td class="fv">2026-12-31</td></tr>
         <tr><td class="fn">officeTitle</td><td class="fv empty">(null)</td></tr>
-        <tr><td class="fn">totalYearsInOffice <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">5</td></tr>
-        <tr><td class="fn">is_contained <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW (Phase C)</span></td><td class="fv">true</td></tr>
+        <tr><td class="fn">totalYearsInOffice <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Total cumulative years this person has served in office (current + previous positions)</span></td><td class="fv">5</td></tr>
+        <tr><td class="fn">is_contained <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW (Phase C)</span><span class="field-desc">Whether this position's district fully contains the searched ZIP code (true=full, false=partial, null=unknown)</span></td><td class="fv">true</td></tr>
 
         <tr class="section-divider"><td colspan="2">Person</td></tr>
         <tr><td class="fn">person.id</td><td class="fv">Z2lkOi8vYmFsbG90LWZhY3RvcnkvQ2FuZGlkYXRlLzQwNjM2Mg==</td></tr>
@@ -543,9 +544,9 @@
         <tr><td class="fn">person.lastName</td><td class="fv">Krothe</td></tr>
         <tr><td class="fn">person.nickname</td><td class="fv empty">(null)</td></tr>
         <tr><td class="fn">person.suffix</td><td class="fv empty">(null)</td></tr>
-        <tr><td class="fn">person.bioText <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv empty">(null)</td></tr>
-        <tr><td class="fn">person.bioguideId <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv empty">(null)</td></tr>
-        <tr><td class="fn">person.slug <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">kara-elaine-krothe</td></tr>
+        <tr><td class="fn">person.bioText <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Biography or description text for this person</span></td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.bioguideId <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Bioguide ID for federal officials (links to congress.gov biographical directory)</span></td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.slug <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">URL-friendly identifier (e.g., for constructing profile page URLs)</span></td><td class="fv">kara-elaine-krothe</td></tr>
 
         <tr class="section-divider"><td colspan="2">Person &rarr; Images <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
         <tr><td class="fn">images[0]</td><td class="fv"><a href="https://assets.civicengine.com/uploads/candidate/headshot/406362/406362.jpg" target="_blank">default: 406362.jpg</a></td></tr>
@@ -578,16 +579,16 @@
 
         <tr class="section-divider"><td colspan="2">Parties</td></tr>
         <tr><td class="fn">parties[0].name</td><td class="fv">Democratic</td></tr>
-        <tr><td class="fn">parties[0].shortName <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">D</td></tr>
+        <tr><td class="fn">parties[0].shortName <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Abbreviated party name (R, D, NP, etc.)</span></td><td class="fv">D</td></tr>
 
         <tr class="section-divider"><td colspan="2">Position</td></tr>
         <tr><td class="fn">position.name</td><td class="fv">Indiana Circuit Court Judge - 10th Circuit (Monroe County), Seat 5</td></tr>
-        <tr><td class="fn">position.description <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">This District or Circuit Court Judge is responsible for adjudicating cases in Civil and Criminal Courts at the trial-level.</td></tr>
+        <tr><td class="fn">position.description <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Description of what this position/role does and its responsibilities</span></td><td class="fv">This District or Circuit Court Judge is responsible for adjudicating cases in Civil and Criminal Courts at the trial-level.</td></tr>
         <tr><td class="fn">position.level</td><td class="fv">STATE</td></tr>
         <tr><td class="fn">position.appointed</td><td class="fv">false</td></tr>
         <tr><td class="fn">position.judicial</td><td class="fv">true</td></tr>
-        <tr><td class="fn">position.tier <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">3</td></tr>
-        <tr><td class="fn">position.seats <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">1</td></tr>
+        <tr><td class="fn">position.tier <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Importance tier (1=federal, 2=state, 3=county, 4=local)</span></td><td class="fv">3</td></tr>
+        <tr><td class="fn">position.seats <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Number of seats available for this position</span></td><td class="fv">1</td></tr>
 
         <tr class="section-divider"><td colspan="2">OfficeHolder &rarr; Contacts</td></tr>
         <tr><td class="fn">contacts[0]</td><td class="fv">phone: 812-349-2615 &middot; type: central</td></tr>
@@ -696,8 +697,8 @@
         <tr><td class="fn">startAt</td><td class="fv">2023-01-01</td></tr>
         <tr><td class="fn">endAt</td><td class="fv">2026-12-31</td></tr>
         <tr><td class="fn">officeTitle</td><td class="fv empty">(null)</td></tr>
-        <tr><td class="fn">totalYearsInOffice <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">3</td></tr>
-        <tr><td class="fn">is_contained <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW (Phase C)</span></td><td class="fv">true</td></tr>
+        <tr><td class="fn">totalYearsInOffice <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Total cumulative years this person has served in office (current + previous positions)</span></td><td class="fv">3</td></tr>
+        <tr><td class="fn">is_contained <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW (Phase C)</span><span class="field-desc">Whether this position's district fully contains the searched ZIP code (true=full, false=partial, null=unknown)</span></td><td class="fv">true</td></tr>
 
         <tr class="section-divider"><td colspan="2">Person</td></tr>
         <tr><td class="fn">person.id</td><td class="fv">Z2lkOi8vYmFsbG90LWZhY3RvcnkvQ2FuZGlkYXRlLzY0MDg5OQ==</td></tr>
@@ -708,9 +709,9 @@
         <tr><td class="fn">person.lastName</td><td class="fv">Iversen</td></tr>
         <tr><td class="fn">person.nickname</td><td class="fv empty">(null)</td></tr>
         <tr><td class="fn">person.suffix</td><td class="fv empty">(null)</td></tr>
-        <tr><td class="fn">person.bioText <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv empty">(null)</td></tr>
-        <tr><td class="fn">person.bioguideId <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv empty">(null)</td></tr>
-        <tr><td class="fn">person.slug <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">peter-j-iversen</td></tr>
+        <tr><td class="fn">person.bioText <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Biography or description text for this person</span></td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.bioguideId <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Bioguide ID for federal officials (links to congress.gov biographical directory)</span></td><td class="fv empty">(null)</td></tr>
+        <tr><td class="fn">person.slug <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">URL-friendly identifier (e.g., for constructing profile page URLs)</span></td><td class="fv">peter-j-iversen</td></tr>
 
         <tr class="section-divider"><td colspan="2">Person &rarr; Images <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td></tr>
         <tr><td class="fn">images[0]</td><td class="fv"><a href="https://assets.civicengine.com/uploads/candidate/headshot/640899/640899.jpg" target="_blank">default: 640899.jpg</a></td></tr>
@@ -756,16 +757,16 @@
 
         <tr class="section-divider"><td colspan="2">Parties</td></tr>
         <tr><td class="fn">parties[0].name</td><td class="fv">Democratic</td></tr>
-        <tr><td class="fn">parties[0].shortName <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">D</td></tr>
+        <tr><td class="fn">parties[0].shortName <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Abbreviated party name (R, D, NP, etc.)</span></td><td class="fv">D</td></tr>
 
         <tr class="section-divider"><td colspan="2">Position</td></tr>
         <tr><td class="fn">position.name</td><td class="fv">Monroe County Council - District 1</td></tr>
-        <tr><td class="fn">position.description <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">The County Legislative Fiscal Authority Board is responsible for evaluating the county government's expenditure and tax policy. Typically, the council does not have the ability to set policy, but rather provides advice to the government and public on the economic effects of government budgets and policy proposals.</td></tr>
+        <tr><td class="fn">position.description <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Description of what this position/role does and its responsibilities</span></td><td class="fv">The County Legislative Fiscal Authority Board is responsible for evaluating the county government's expenditure and tax policy. Typically, the council does not have the ability to set policy, but rather provides advice to the government and public on the economic effects of government budgets and policy proposals.</td></tr>
         <tr><td class="fn">position.level</td><td class="fv">COUNTY</td></tr>
         <tr><td class="fn">position.appointed</td><td class="fv">false</td></tr>
         <tr><td class="fn">position.judicial</td><td class="fv">false</td></tr>
-        <tr><td class="fn">position.tier <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">3</td></tr>
-        <tr><td class="fn">position.seats <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span></td><td class="fv">1</td></tr>
+        <tr><td class="fn">position.tier <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Importance tier (1=federal, 2=state, 3=county, 4=local)</span></td><td class="fv">3</td></tr>
+        <tr><td class="fn">position.seats <span style="background:#ff5740;color:#fff;padding:0.1rem 0.3rem;border-radius:4px;font-size:0.65rem;font-weight:700;">NEW</span><span class="field-desc">Number of seats available for this position</span></td><td class="fv">1</td></tr>
 
         <tr class="section-divider"><td colspan="2">OfficeHolder &rarr; Contacts</td></tr>
         <tr><td class="fn">contacts[0]</td><td class="fv">phone: 812-349-7312 &middot; type: office</td></tr>
