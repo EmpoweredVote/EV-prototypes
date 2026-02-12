@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@chrisandrewsedu/ev-ui": "^0.1.5",
+    "@chrisandrewsedu/ev-ui": "^0.1.6",
     "@react-spring/web": "^10.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
