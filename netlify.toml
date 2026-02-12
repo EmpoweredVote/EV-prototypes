@@ -3,17 +3,14 @@
   # Publish the root directory which contains index.html and subdirectories
   publish = "."
 
-  # Build script that clones and builds ev-ui, then builds all projects
-  command = '''
-    echo "Cloning ev-ui..."
-    git clone https://github.com/chrisandrewsedu/ev-ui.git ../ev-ui
-    cd ../ev-ui
-    npm install
-    npm run build
-    cd /opt/build/repo
-    echo "Building prototypes..."
-    npm run build:all
-  '''
+  command = "npm run build:all"
+
+# API proxy (must come before SPA redirects)
+[[redirects]]
+  from = "/api/*"
+  to = "https://ev-backend-h3n8.onrender.com/:splat"
+  status = 200
+  force = true
 
 # Redirect rules for each project to handle SPA routing
 [[redirects]]
