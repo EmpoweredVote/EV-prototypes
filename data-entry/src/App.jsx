@@ -9,8 +9,11 @@ import PoliticianDetail from './components/AddMode/PoliticianDetail'
 import StanceForm from './components/AddMode/StanceForm'
 import ReviewQueue from './components/ReviewMode/ReviewQueue'
 import ReviewForm from './components/ReviewMode/ReviewForm'
+import PoliticianReviewQueue from './components/ReviewMode/PoliticianReviewQueue'
+import PoliticianReviewForm from './components/ReviewMode/PoliticianReviewForm'
 import PoliticianList from './components/ManageMode/PoliticianList'
 import AddPoliticianForm from './components/ManageMode/AddPoliticianForm'
+import PoliticianDetailManage from './components/ManageMode/PoliticianDetailManage'
 
 function App() {
   const { user, loading } = useAuth()
@@ -37,6 +40,9 @@ function App() {
           <Route path="/review/:contextKey" element={<ReviewForm />} />
           <Route path="/manage" element={<PoliticianList />} />
           <Route path="/manage/add" element={<AddPoliticianForm />} />
+          <Route path="/manage/:politicianId" element={<PoliticianDetailManage />} />
+          <Route path="/review/politicians" element={<PoliticianReviewQueue />} />
+          <Route path="/review/politician/:politicianId" element={<PoliticianReviewForm />} />
         </Routes>
       </main>
     </div>

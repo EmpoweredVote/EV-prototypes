@@ -86,9 +86,17 @@ export interface StagingPolitician {
   contacts?: ContactEntry[];
   degrees?: DegreeEntry[];
   experiences?: ExperienceEntry[];
-  status: 'pending' | 'approved' | 'rejected' | 'merged';
+  status: 'draft' | 'pending' | 'needs_review' | 'approved' | 'rejected' | 'merged';
   added_by: string;
+  review_count: number;
+  reviewed_by: string[];
+  last_reviewed_at?: string;
+  locked_by?: string;
+  locked_at?: string;
+  approved_at?: string;
+  merged_to_id?: string;
   created_at: string;
+  updated_at: string;
 }
 
 export interface Topic {
@@ -274,6 +282,95 @@ export async function editAndResubmit(
  */
 export async function getReviewQueue(): Promise<StagingStance[]> {
   return fetchAPI<StagingStance[]>('/staging/stances/review-queue');
+}
+
+/**
+ * Submit a politician for review
+ */
+export async function submitPoliticianForReview(id: string): Promise<{ status: string }> {
+  return fetchAPI<{ status: string }>(`/staging/politicians/${id}/submit`, {
+    method: 'POST',
+  });
+}
+
+/**
+ * Get the politician review queue
+ */
+export async function getPoliticianReviewQueue(): Promise<StagingPolitician[]> {
+  return fetchAPI<StagingPolitician[]>('/staging/politicians/review-queue');
+}
+
+/**
+ * Acquire a lock on a politician
+ */
+export async function acquirePoliticianLock(id: string): Promise<{
+  locked: boolean;
+  locked_by: string;
+  expires_at: string;
+}> {
+  return fetchAPI(`/staging/politicians/${id}/lock`, {
+    method: 'POST',
+  });
+}
+
+/**
+ * Release a lock on a politician
+ */
+export async function releasePoliticianLock(id: string): Promise<{ status: string }> {
+  return fetchAPI<{ status: string }>(`/staging/politicians/${id}/lock`, {
+    method: 'DELETE',
+  });
+}
+
+/**
+ * Approve a politician review
+ */
+export async function approvePoliticianReview(id: string): Promise<{
+  status: string;
+  review_count: number;
+  approved: boolean;
+}> {
+  return fetchAPI(`/staging/politicians/${id}/review-approve`, {
+    method: 'POST',
+  });
+}
+
+/**
+ * Reject a politician during review
+ */
+export async function rejectPolitician(
+  id: string,
+  comment?: string
+): Promise<{ status: string }> {
+  return fetchAPI<{ status: string }>(`/staging/politicians/${id}/review-reject`, {
+    method: 'POST',
+    body: JSON.stringify({ comment }),
+  });
+}
+
+/**
+ * Edit and resubmit a politician
+ */
+export async function editAndResubmitPolitician(
+  id: string,
+  data: {
+    full_name?: string;
+    party?: string;
+    office?: string;
+    office_level?: string;
+    state?: string;
+    district?: string;
+    bio_text?: string;
+    photo_url?: string;
+    contacts?: ContactEntry[];
+    degrees?: DegreeEntry[];
+    experiences?: ExperienceEntry[];
+  }
+): Promise<{ status: string }> {
+  return fetchAPI<{ status: string }>(`/staging/politicians/${id}/edit-resubmit`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
 }
 
 /**

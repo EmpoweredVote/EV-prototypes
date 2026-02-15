@@ -20,6 +20,11 @@ function ModeSelector() {
           <h2>Manage Politicians</h2>
           <p>Add new politicians or view existing</p>
         </Link>
+        <Link to="/review/politicians" className="mode-card">
+          <div className="mode-icon">&#128100;</div>
+          <h2>Review Politicians</h2>
+          <p>Vet politician entries from other volunteers</p>
+        </Link>
       </div>
     </div>
   )

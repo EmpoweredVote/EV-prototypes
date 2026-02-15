@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { getData } from '../../api/sheets'
 import { useAuth } from '../../context/AuthContext'
+import { OFFICE_LEVEL_LABELS } from './politicianConstants'
 
-const OFFICE_LEVEL_LABELS = {
-  federal: 'Federal',
-  state: 'State',
-  local: 'Local',
-  municipal: 'Municipal',
-  school_district: 'School District'
+const STATUS_LABELS = {
+  draft: 'Draft',
+  pending: 'Draft',
+  needs_review: 'In Review',
+  approved: 'Approved',
+  rejected: 'Rejected',
+  merged: 'Merged'
 }
 
 function PoliticianList() {
@@ -134,24 +136,49 @@ function PoliticianList() {
         </div>
       ) : (
         <div className="manage-politician-list">
-          {filteredPoliticians.map((politician, index) => (
-            <div key={politician.external_id || index} className="manage-politician-card">
-              <div className="politician-info">
-                <h3>{politician.full_name}</h3>
-                <p className="politician-meta">
-                  {politician.office && <span className="office">{politician.office}</span>}
-                  {(politician.state || politician.district) && (
-                    <span className="location">{formatLocation(politician)}</span>
-                  )}
-                </p>
-              </div>
-              {politician.added_by && (
-                <div className="added-by">
-                  {politician.added_by === user.user_id ? 'Added by you' : 'Added by volunteer'}
+          {filteredPoliticians.map((politician, index) => {
+            const isStaging = politician.source === 'staging'
+            const cardContent = (
+              <>
+                <div className="politician-info">
+                  <h3>{politician.full_name}</h3>
+                  <p className="politician-meta">
+                    {politician.party && <span className="party">{politician.party}</span>}
+                    {politician.office && <span className="office">{politician.office}</span>}
+                    {(politician.state || politician.district) && (
+                      <span className="location">{formatLocation(politician)}</span>
+                    )}
+                  </p>
                 </div>
-              )}
-            </div>
-          ))}
+                <div className="card-right">
+                  {isStaging && politician.status && (
+                    <span className={`status-badge status-${politician.status === 'pending' ? 'draft' : politician.status}`}>
+                      {STATUS_LABELS[politician.status] || politician.status}
+                    </span>
+                  )}
+                  {politician.added_by && (
+                    <span className="added-by">
+                      {politician.added_by === user.user_id ? 'Added by you' : 'Added by volunteer'}
+                    </span>
+                  )}
+                </div>
+              </>
+            )
+
+            return isStaging ? (
+              <Link
+                key={politician.id || index}
+                to={`/manage/${politician.id}`}
+                className="manage-politician-card manage-politician-link"
+              >
+                {cardContent}
+              </Link>
+            ) : (
+              <div key={politician.external_id || index} className="manage-politician-card">
+                {cardContent}
+              </div>
+            )
+          })}
         </div>
       )}
     </div>
