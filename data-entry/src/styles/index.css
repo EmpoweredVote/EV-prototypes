@@ -965,6 +965,124 @@ button:disabled, .btn-primary:disabled, .btn-secondary:disabled {
   margin-top: 4px;
 }
 
+/* Collapsible Sections */
+.collapsible-section {
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  margin-top: 20px;
+}
+
+.collapsible-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  cursor: pointer;
+  background: var(--gray-50);
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--gray-700);
+  user-select: none;
+  transition: background 0.15s ease;
+}
+
+.collapsible-header:hover {
+  background: var(--gray-100);
+}
+
+.collapsible-chevron {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid var(--gray-500);
+  transition: transform 0.2s ease;
+}
+
+.collapsible-section.open .collapsible-chevron {
+  transform: rotate(180deg);
+}
+
+.collapsible-section.open .collapsible-header {
+  border-radius: var(--radius) var(--radius) 0 0;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.collapsible-content {
+  display: none;
+  padding: 16px;
+}
+
+.collapsible-section.open .collapsible-content {
+  display: block;
+}
+
+/* Repeatable Rows */
+.repeatable-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.repeatable-row .form-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.repeatable-row .form-group input,
+.repeatable-row .form-group select {
+  padding: 8px 12px;
+  font-size: 0.875rem;
+}
+
+.repeatable-row .form-group label {
+  font-size: 0.75rem;
+  margin-bottom: 4px;
+}
+
+.btn-remove-row {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: none;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  color: var(--coral);
+  font-size: 1.125rem;
+  line-height: 1;
+  cursor: pointer;
+  margin-top: 24px;
+}
+
+.btn-remove-row:hover {
+  background: var(--coral-light);
+  border-color: var(--coral);
+}
+
+.btn-add-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  background: var(--teal-light);
+  color: var(--teal);
+  border: 1px solid var(--teal);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-add-row:hover {
+  background: var(--teal);
+  color: var(--white);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .main-content {

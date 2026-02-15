@@ -10,6 +10,7 @@
 export {
   getData,
   addPolitician,
+  updatePolitician,
   addStance,
   updateStance,
   submitForReview,

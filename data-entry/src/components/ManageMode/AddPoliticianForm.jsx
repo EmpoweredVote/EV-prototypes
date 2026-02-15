@@ -88,9 +88,13 @@ const STATES = [
   { value: 'National', label: 'National (for US President)' }
 ]
 
+const CONTACT_TYPES = ['phone', 'email', 'website', 'fax']
+const EXPERIENCE_TYPES = ['work', 'office', 'military', 'other']
+
 function AddPoliticianForm() {
   const navigate = useNavigate()
 
+  // Mandatory fields
   const [fullName, setFullName] = useState('')
   const [party, setParty] = useState('')
   const [customParty, setCustomParty] = useState('')
@@ -100,8 +104,22 @@ function AddPoliticianForm() {
   const [state, setState] = useState('')
   const [district, setDistrict] = useState('')
 
+  // Optional biographical fields
+  const [bioText, setBioText] = useState('')
+  const [photoURL, setPhotoURL] = useState('')
+  const [contacts, setContacts] = useState([])
+  const [degrees, setDegrees] = useState([])
+  const [experiences, setExperiences] = useState([])
+
+  // Collapsible section state
+  const [openSections, setOpenSections] = useState({})
+
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
+
+  const toggleSection = (key) => {
+    setOpenSections(prev => ({ ...prev, [key]: !prev[key] }))
+  }
 
   // When office changes, auto-set the office level
   const handleOfficeChange = (newOffice) => {
@@ -112,6 +130,33 @@ function AddPoliticianForm() {
     } else {
       setOfficeLevel('')
     }
+  }
+
+  // Contact helpers
+  const addContact = () => setContacts([...contacts, { type: 'phone', value: '' }])
+  const removeContact = (i) => setContacts(contacts.filter((_, idx) => idx !== i))
+  const updateContact = (i, field, value) => {
+    const updated = [...contacts]
+    updated[i] = { ...updated[i], [field]: value }
+    setContacts(updated)
+  }
+
+  // Degree helpers
+  const addDegree = () => setDegrees([...degrees, { degree: '', major: '', school: '', grad_year: '' }])
+  const removeDegree = (i) => setDegrees(degrees.filter((_, idx) => idx !== i))
+  const updateDegree = (i, field, value) => {
+    const updated = [...degrees]
+    updated[i] = { ...updated[i], [field]: value }
+    setDegrees(updated)
+  }
+
+  // Experience helpers
+  const addExperience = () => setExperiences([...experiences, { title: '', organization: '', type: 'work', start: '', end: '' }])
+  const removeExperience = (i) => setExperiences(experiences.filter((_, idx) => idx !== i))
+  const updateExperience = (i, field, value) => {
+    const updated = [...experiences]
+    updated[i] = { ...updated[i], [field]: value }
+    setExperiences(updated)
   }
 
   const handleSubmit = async (e) => {
@@ -135,6 +180,11 @@ function AddPoliticianForm() {
     const finalParty = party === 'Other' ? customParty : party
     const finalOffice = office === 'Other' ? customOffice : office
 
+    // Filter out empty optional entries
+    const validContacts = contacts.filter(c => c.value.trim())
+    const validDegrees = degrees.filter(d => d.school.trim() || d.degree.trim())
+    const validExperiences = experiences.filter(x => x.title.trim() || x.organization.trim())
+
     try {
       setSaving(true)
       setError(null)
@@ -145,7 +195,12 @@ function AddPoliticianForm() {
         office: finalOffice,
         office_level: officeLevel,
         state: state,
-        district: district.trim()
+        district: district.trim(),
+        bio_text: bioText.trim() || undefined,
+        photo_url: photoURL.trim() || undefined,
+        contacts: validContacts.length > 0 ? validContacts : undefined,
+        degrees: validDegrees.length > 0 ? validDegrees : undefined,
+        experiences: validExperiences.length > 0 ? validExperiences : undefined,
       })
 
       navigate('/manage')
@@ -287,6 +342,187 @@ function AddPoliticianForm() {
             <span className="form-hint">Leave blank if not applicable</span>
           </div>
         )}
+
+        {/* Optional: Bio & Photo */}
+        <div className={`collapsible-section ${openSections.bio ? 'open' : ''}`}>
+          <div className="collapsible-header" onClick={() => toggleSection('bio')}>
+            <span>+ Bio & Photo</span>
+            <span className="collapsible-chevron" />
+          </div>
+          <div className="collapsible-content">
+            <div className="form-group">
+              <label htmlFor="bioText">Biography</label>
+              <textarea
+                id="bioText"
+                value={bioText}
+                onChange={(e) => setBioText(e.target.value)}
+                placeholder="Brief biography or description..."
+                rows={3}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="photoURL">Photo URL</label>
+              <input
+                type="url"
+                id="photoURL"
+                value={photoURL}
+                onChange={(e) => setPhotoURL(e.target.value)}
+                placeholder="https://example.com/photo.jpg"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Optional: Contact Info */}
+        <div className={`collapsible-section ${openSections.contacts ? 'open' : ''}`}>
+          <div className="collapsible-header" onClick={() => toggleSection('contacts')}>
+            <span>+ Contact Info</span>
+            <span className="collapsible-chevron" />
+          </div>
+          <div className="collapsible-content">
+            {contacts.map((contact, i) => (
+              <div key={i} className="repeatable-row">
+                <div className="form-group">
+                  <label>Type</label>
+                  <select
+                    value={contact.type}
+                    onChange={(e) => updateContact(i, 'type', e.target.value)}
+                  >
+                    {CONTACT_TYPES.map(t => (
+                      <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group" style={{ flex: 2 }}>
+                  <label>Value</label>
+                  <input
+                    type="text"
+                    value={contact.value}
+                    onChange={(e) => updateContact(i, 'value', e.target.value)}
+                    placeholder={contact.type === 'email' ? 'name@example.com' : contact.type === 'phone' ? '(555) 123-4567' : 'https://...'}
+                  />
+                </div>
+                <button type="button" className="btn-remove-row" onClick={() => removeContact(i)}>&times;</button>
+              </div>
+            ))}
+            <button type="button" className="btn-add-row" onClick={addContact}>+ Add Contact</button>
+          </div>
+        </div>
+
+        {/* Optional: Education */}
+        <div className={`collapsible-section ${openSections.degrees ? 'open' : ''}`}>
+          <div className="collapsible-header" onClick={() => toggleSection('degrees')}>
+            <span>+ Education</span>
+            <span className="collapsible-chevron" />
+          </div>
+          <div className="collapsible-content">
+            {degrees.map((deg, i) => (
+              <div key={i} className="repeatable-row">
+                <div className="form-group">
+                  <label>Degree</label>
+                  <input
+                    type="text"
+                    value={deg.degree}
+                    onChange={(e) => updateDegree(i, 'degree', e.target.value)}
+                    placeholder="e.g., B.A."
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Major</label>
+                  <input
+                    type="text"
+                    value={deg.major}
+                    onChange={(e) => updateDegree(i, 'major', e.target.value)}
+                    placeholder="e.g., Political Science"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>School</label>
+                  <input
+                    type="text"
+                    value={deg.school}
+                    onChange={(e) => updateDegree(i, 'school', e.target.value)}
+                    placeholder="e.g., Harvard University"
+                  />
+                </div>
+                <div className="form-group" style={{ maxWidth: 100 }}>
+                  <label>Year</label>
+                  <input
+                    type="text"
+                    value={deg.grad_year}
+                    onChange={(e) => updateDegree(i, 'grad_year', e.target.value)}
+                    placeholder="2005"
+                  />
+                </div>
+                <button type="button" className="btn-remove-row" onClick={() => removeDegree(i)}>&times;</button>
+              </div>
+            ))}
+            <button type="button" className="btn-add-row" onClick={addDegree}>+ Add Degree</button>
+          </div>
+        </div>
+
+        {/* Optional: Work Experience */}
+        <div className={`collapsible-section ${openSections.experiences ? 'open' : ''}`}>
+          <div className="collapsible-header" onClick={() => toggleSection('experiences')}>
+            <span>+ Work Experience</span>
+            <span className="collapsible-chevron" />
+          </div>
+          <div className="collapsible-content">
+            {experiences.map((exp, i) => (
+              <div key={i} className="repeatable-row">
+                <div className="form-group">
+                  <label>Title</label>
+                  <input
+                    type="text"
+                    value={exp.title}
+                    onChange={(e) => updateExperience(i, 'title', e.target.value)}
+                    placeholder="e.g., Attorney"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Organization</label>
+                  <input
+                    type="text"
+                    value={exp.organization}
+                    onChange={(e) => updateExperience(i, 'organization', e.target.value)}
+                    placeholder="e.g., Smith & Associates"
+                  />
+                </div>
+                <div className="form-group" style={{ maxWidth: 120 }}>
+                  <label>Type</label>
+                  <select
+                    value={exp.type}
+                    onChange={(e) => updateExperience(i, 'type', e.target.value)}
+                  >
+                    {EXPERIENCE_TYPES.map(t => (
+                      <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group" style={{ maxWidth: 100 }}>
+                  <label>Start</label>
+                  <input
+                    type="text"
+                    value={exp.start}
+                    onChange={(e) => updateExperience(i, 'start', e.target.value)}
+                    placeholder="2010"
+                  />
+                </div>
+                <div className="form-group" style={{ maxWidth: 100 }}>
+                  <label>End</label>
+                  <input
+                    type="text"
+                    value={exp.end}
+                    onChange={(e) => updateExperience(i, 'end', e.target.value)}
+                    placeholder="Present"
+                  />
+                </div>
+                <button type="button" className="btn-remove-row" onClick={() => removeExperience(i)}>&times;</button>
+              </div>
+            ))}
+            <button type="button" className="btn-add-row" onClick={addExperience}>+ Add Experience</button>
+          </div>
+        </div>
 
         <div className="form-actions">
           <Link to="/manage" className="btn-secondary">Cancel</Link>

@@ -51,6 +51,27 @@ export interface StagingStance {
   updated_at: string;
 }
 
+export interface ContactEntry {
+  type: string;
+  value: string;
+  source?: string;
+}
+
+export interface DegreeEntry {
+  degree: string;
+  major?: string;
+  school: string;
+  grad_year?: string;
+}
+
+export interface ExperienceEntry {
+  title: string;
+  organization: string;
+  type?: string;
+  start?: string;
+  end?: string;
+}
+
 export interface StagingPolitician {
   id: string;
   external_id?: string;
@@ -60,6 +81,11 @@ export interface StagingPolitician {
   office_level: string;
   state: string;
   district: string;
+  bio_text?: string;
+  photo_url?: string;
+  contacts?: ContactEntry[];
+  degrees?: DegreeEntry[];
+  experiences?: ExperienceEntry[];
   status: 'pending' | 'approved' | 'rejected' | 'merged';
   added_by: string;
   created_at: string;
@@ -98,9 +124,39 @@ export async function addPolitician(data: {
   office_level: string;
   state: string;
   district: string;
+  bio_text?: string;
+  photo_url?: string;
+  contacts?: ContactEntry[];
+  degrees?: DegreeEntry[];
+  experiences?: ExperienceEntry[];
 }): Promise<StagingPolitician> {
   return fetchAPI<StagingPolitician>('/staging/politicians', {
     method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+/**
+ * Update an existing staged politician
+ */
+export async function updatePolitician(
+  id: string,
+  data: {
+    full_name?: string;
+    party?: string;
+    office?: string;
+    office_level?: string;
+    state?: string;
+    district?: string;
+    bio_text?: string;
+    photo_url?: string;
+    contacts?: ContactEntry[];
+    degrees?: DegreeEntry[];
+    experiences?: ExperienceEntry[];
+  }
+): Promise<{ status: string }> {
+  return fetchAPI<{ status: string }>(`/staging/politicians/${id}`, {
+    method: 'PUT',
     body: JSON.stringify(data),
   });
 }
