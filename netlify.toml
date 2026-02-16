@@ -33,6 +33,11 @@
   to = "/data-entry/dist/index.html"
   status = 200
 
+[[redirects]]
+  from = "/fallacy-finders/*"
+  to = "/fallacy-finders/dist/index.html"
+  status = 200
+
 # Set correct MIME types for JavaScript files
 [[headers]]
   for = "/**/*.js"
