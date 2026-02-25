@@ -156,6 +156,9 @@ function PoliticianList() {
                       {STATUS_LABELS[politician.status] || politician.status}
                     </span>
                   )}
+                  {!isStaging && (
+                    <span className="status-badge status-approved">BallotReady</span>
+                  )}
                   {politician.added_by && (
                     <span className="added-by">
                       {politician.added_by === user.user_id ? 'Added by you' : 'Added by volunteer'}
@@ -165,18 +168,14 @@ function PoliticianList() {
               </>
             )
 
-            return isStaging ? (
+            return (
               <Link
-                key={politician.id || index}
+                key={politician.id || politician.external_id || index}
                 to={`/manage/${politician.id}`}
                 className="manage-politician-card manage-politician-link"
               >
                 {cardContent}
               </Link>
-            ) : (
-              <div key={politician.external_id || index} className="manage-politician-card">
-                {cardContent}
-              </div>
             )
           })}
         </div>

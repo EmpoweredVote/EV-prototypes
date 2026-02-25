@@ -86,6 +86,35 @@ export interface StagingPolitician {
   contacts?: ContactEntry[];
   degrees?: DegreeEntry[];
   experiences?: ExperienceEntry[];
+  // Extended fields
+  urls?: string[];
+  web_form_url?: string;
+  images?: Array<{ url: string; type: string }>;
+  addresses?: Array<{
+    address_1?: string;
+    address_2?: string;
+    state?: string;
+    postal_code?: string;
+    phone_1?: string;
+    phone_2?: string;
+  }>;
+  valid_from?: string;
+  valid_to?: string;
+  total_years_in_office?: number;
+  office_description?: string;
+  office_seats?: number;
+  partisan_type?: string;
+  salary?: string;
+  normalized_position_name?: string;
+  district_type?: string;
+  district_ocd_id?: string;
+  district_geo_id?: string;
+  chamber_name?: string;
+  term_limit?: string;
+  term_length?: string;
+  election_frequency?: string;
+  is_appointed?: boolean;
+  is_vacant?: boolean;
   status: 'draft' | 'pending' | 'needs_review' | 'approved' | 'rejected' | 'merged';
   added_by: string;
   review_count: number;
@@ -97,6 +126,91 @@ export interface StagingPolitician {
   merged_to_id?: string;
   created_at: string;
   updated_at: string;
+}
+
+export interface EssentialsPoliticianFull {
+  // Core identity
+  id: string;
+  external_id: number;
+  first_name: string;
+  middle_initial: string;
+  last_name: string;
+  preferred_name: string;
+  name_suffix: string;
+  full_name: string;
+  party: string;
+  party_short_name?: string;
+
+  // Photos & links
+  photo_origin_url: string;
+  web_form_url: string;
+  urls: string[];
+  email_addresses: string[];
+
+  // Office
+  office_title: string;
+  representing_state: string;
+  representing_city: string;
+  office_description?: string;
+  seats?: number;
+  normalized_position_name?: string;
+  partisan_type?: string;
+  salary?: string;
+
+  // District/Geo
+  district_type: string;
+  district_label: string;
+  district_id?: string;
+  geo_id?: string;
+  ocd_id?: string;
+  mtfcc?: string;
+  is_judicial?: boolean;
+
+  // Chamber/Government
+  chamber_name: string;
+  chamber_name_formal: string;
+  government_name: string;
+  election_frequency?: string;
+
+  // Status flags
+  is_elected: boolean;
+  is_appointed?: boolean;
+  is_vacant?: boolean;
+  is_off_cycle?: boolean;
+  specificity?: string;
+
+  // Bio
+  bio_text?: string;
+  bioguide_id?: string;
+  slug?: string;
+  total_years_in_office?: number;
+
+  // Term dates
+  term_start?: string;
+  term_end?: string;
+
+  // Related data
+  images?: Array<{ url: string; type: string }>;
+  degrees?: Array<{ degree: string; major: string; school: string; grad_year: number }>;
+  experiences?: Array<{ title: string; organization: string; type: string; start: string; end: string }>;
+  committees?: Array<{ name: string; position: string; urls: string[] }>;
+
+  // Profile-specific (from PoliticianProfileOut)
+  addresses?: Array<{
+    id: string;
+    address_1: string;
+    address_2: string;
+    address_3: string;
+    state: string;
+    postal_code: string;
+    phone_1: string;
+    phone_2: string;
+  }>;
+  identifiers?: Array<{
+    identifier_type: string;
+    identifier_value: string;
+  }>;
+  notes?: string[];
 }
 
 export interface Topic {
@@ -122,6 +236,13 @@ export async function getData(): Promise<AllData> {
 }
 
 /**
+ * Fetch full essentials politician data (all fields from BallotReady)
+ */
+export async function getEssentialsPolitician(id: string): Promise<EssentialsPoliticianFull> {
+  return fetchAPI<EssentialsPoliticianFull>(`/essentials/politician/${id}`);
+}
+
+/**
  * Add a new politician
  */
 export async function addPolitician(data: {
@@ -137,6 +258,27 @@ export async function addPolitician(data: {
   contacts?: ContactEntry[];
   degrees?: DegreeEntry[];
   experiences?: ExperienceEntry[];
+  urls?: string[];
+  web_form_url?: string;
+  images?: Array<{ url: string; type: string }>;
+  addresses?: Array<{ address_1?: string; address_2?: string; state?: string; postal_code?: string; phone_1?: string; phone_2?: string }>;
+  valid_from?: string;
+  valid_to?: string;
+  total_years_in_office?: number;
+  office_description?: string;
+  office_seats?: number;
+  partisan_type?: string;
+  salary?: string;
+  normalized_position_name?: string;
+  district_type?: string;
+  district_ocd_id?: string;
+  district_geo_id?: string;
+  chamber_name?: string;
+  term_limit?: string;
+  term_length?: string;
+  election_frequency?: string;
+  is_appointed?: boolean;
+  is_vacant?: boolean;
 }): Promise<StagingPolitician> {
   return fetchAPI<StagingPolitician>('/staging/politicians', {
     method: 'POST',
@@ -161,6 +303,27 @@ export async function updatePolitician(
     contacts?: ContactEntry[];
     degrees?: DegreeEntry[];
     experiences?: ExperienceEntry[];
+    urls?: string[];
+    web_form_url?: string;
+    images?: Array<{ url: string; type: string }>;
+    addresses?: Array<{ address_1?: string; address_2?: string; state?: string; postal_code?: string; phone_1?: string; phone_2?: string }>;
+    valid_from?: string;
+    valid_to?: string;
+    total_years_in_office?: number;
+    office_description?: string;
+    office_seats?: number;
+    partisan_type?: string;
+    salary?: string;
+    normalized_position_name?: string;
+    district_type?: string;
+    district_ocd_id?: string;
+    district_geo_id?: string;
+    chamber_name?: string;
+    term_limit?: string;
+    term_length?: string;
+    election_frequency?: string;
+    is_appointed?: boolean;
+    is_vacant?: boolean;
   }
 ): Promise<{ status: string }> {
   return fetchAPI<{ status: string }>(`/staging/politicians/${id}`, {
@@ -294,6 +457,19 @@ export async function submitPoliticianForReview(id: string): Promise<{ status: s
 }
 
 /**
+ * Approve a politician directly (self-approve flow)
+ */
+export async function approvePoliticianDirect(id: string): Promise<{
+  status: string;
+  review_count: number;
+  approved: boolean;
+}> {
+  return fetchAPI(`/staging/politicians/${id}/review-approve`, {
+    method: 'POST',
+  });
+}
+
+/**
  * Get the politician review queue
  */
 export async function getPoliticianReviewQueue(): Promise<StagingPolitician[]> {
@@ -365,6 +541,27 @@ export async function editAndResubmitPolitician(
     contacts?: ContactEntry[];
     degrees?: DegreeEntry[];
     experiences?: ExperienceEntry[];
+    urls?: string[];
+    web_form_url?: string;
+    images?: Array<{ url: string; type: string }>;
+    addresses?: Array<{ address_1?: string; address_2?: string; state?: string; postal_code?: string; phone_1?: string; phone_2?: string }>;
+    valid_from?: string;
+    valid_to?: string;
+    total_years_in_office?: number;
+    office_description?: string;
+    office_seats?: number;
+    partisan_type?: string;
+    salary?: string;
+    normalized_position_name?: string;
+    district_type?: string;
+    district_ocd_id?: string;
+    district_geo_id?: string;
+    chamber_name?: string;
+    term_limit?: string;
+    term_length?: string;
+    election_frequency?: string;
+    is_appointed?: boolean;
+    is_vacant?: boolean;
   }
 ): Promise<{ status: string }> {
   return fetchAPI<{ status: string }>(`/staging/politicians/${id}/edit-resubmit`, {

@@ -84,8 +84,26 @@ export const STATES = [
   { value: 'National', label: 'National (for US President)' }
 ]
 
-export const CONTACT_TYPES = ['phone', 'email', 'website', 'fax']
+export const CONTACT_TYPES = ['phone', 'email', 'website', 'fax', 'twitter', 'facebook', 'instagram']
 export const EXPERIENCE_TYPES = ['work', 'office', 'military', 'other']
+
+export const ADDRESS_FIELDS = ['address_1', 'address_2', 'state', 'postal_code', 'phone_1', 'phone_2']
+
+export const DISTRICT_TYPES = [
+  { value: 'NATIONAL_EXEC', label: 'National Executive' },
+  { value: 'NATIONAL_UPPER', label: 'National Upper (Senate)' },
+  { value: 'NATIONAL_LOWER', label: 'National Lower (House)' },
+  { value: 'STATE_EXEC', label: 'State Executive' },
+  { value: 'STATE_UPPER', label: 'State Upper (Senate)' },
+  { value: 'STATE_LOWER', label: 'State Lower (House/Assembly)' },
+  { value: 'LOCAL_EXEC', label: 'Local Executive' },
+  { value: 'LOCAL', label: 'Local' },
+  { value: 'COUNTY', label: 'County' },
+  { value: 'SCHOOL', label: 'School' },
+  { value: 'JUDICIAL', label: 'Judicial' },
+]
+
+export const PARTISAN_TYPES = ['partisan', 'nonpartisan', 'unknown']
 
 export const OFFICE_LEVEL_LABELS = {
   federal: 'Federal',

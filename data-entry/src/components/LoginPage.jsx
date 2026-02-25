@@ -28,7 +28,7 @@ function LoginPage() {
     <AuthForm
       logoSrc="/EVLogo.svg"
       appName="Empowered Vote"
-      appSubtitle="Stance Data Entry"
+      appSubtitle="Community Verification System"
       mode={mode}
       onSubmit={handleSubmit}
       onModeSwitch={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(null) }}

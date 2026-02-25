@@ -9,6 +9,7 @@
 
 export {
   getData,
+  getEssentialsPolitician,
   addPolitician,
   updatePolitician,
   addStance,
@@ -20,6 +21,7 @@ export {
   editAndResubmit,
   getReviewQueue,
   submitPoliticianForReview,
+  approvePoliticianDirect,
   getPoliticianReviewQueue,
   acquirePoliticianLock,
   releasePoliticianLock,

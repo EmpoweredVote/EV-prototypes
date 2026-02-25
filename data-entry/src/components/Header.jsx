@@ -9,7 +9,7 @@ function Header() {
     <header className="header">
       <div className="header-left">
         <Link to="/" className="header-logo">
-          Stance Data Entry
+          Community Verification System
         </Link>
         {location.pathname !== '/' && (
           <Link to="/" className="back-link">

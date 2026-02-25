@@ -18,7 +18,7 @@ function ModeSelector() {
         <Link to="/manage" className="mode-card">
           <div className="mode-icon">&#9998;</div>
           <h2>Manage Politicians</h2>
-          <p>Add new politicians or view existing</p>
+          <p>Add new or edit existing politicians</p>
         </Link>
         <Link to="/review/politicians" className="mode-card">
           <div className="mode-icon">&#128100;</div>
