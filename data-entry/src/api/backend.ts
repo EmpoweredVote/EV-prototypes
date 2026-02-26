@@ -622,3 +622,119 @@ export async function logout(): Promise<void> {
     credentials: 'include',
   });
 }
+
+// Building photo types
+export interface JurisdictionGap {
+  geo_id: string;
+  city: string;
+  state: string;
+  district_type: string;
+  politician_count: number;
+}
+
+export interface StagingBuildingPhoto {
+  id: string;
+  place_geoid: string;
+  place_name: string;
+  state: string;
+  url: string;
+  source_url?: string;
+  license: string;
+  attribution: string;
+  status: 'draft' | 'needs_review' | 'approved' | 'rejected';
+  added_by: string;
+  review_count: number;
+  reviewed_by: string[];
+  last_reviewed_at?: string;
+  approved_at?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * Get jurisdictions missing building photos
+ */
+export async function getBuildingPhotoGaps(state?: string): Promise<JurisdictionGap[]> {
+  const params = state ? `?state=${encodeURIComponent(state)}` : '';
+  return fetchAPI<JurisdictionGap[]>(`/staging/building-photos/gaps${params}`);
+}
+
+/**
+ * Create a new staging building photo
+ */
+export async function createBuildingPhoto(data: {
+  place_geoid: string;
+  place_name: string;
+  state: string;
+  url: string;
+  source_url?: string;
+  license: string;
+  attribution: string;
+}): Promise<StagingBuildingPhoto> {
+  return fetchAPI<StagingBuildingPhoto>('/staging/building-photos', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+/**
+ * List staging building photos
+ */
+export async function listBuildingPhotos(status?: string): Promise<StagingBuildingPhoto[]> {
+  const params = status ? `?status=${encodeURIComponent(status)}` : '';
+  return fetchAPI<StagingBuildingPhoto[]>(`/staging/building-photos${params}`);
+}
+
+/**
+ * Submit a building photo for review
+ */
+export async function submitBuildingPhotoForReview(id: string): Promise<{ status: string }> {
+  return fetchAPI<{ status: string }>(`/staging/building-photos/${id}/submit`, {
+    method: 'POST',
+  });
+}
+
+/**
+ * Get building photo review queue
+ */
+export async function getBuildingPhotoReviewQueue(): Promise<StagingBuildingPhoto[]> {
+  return fetchAPI<StagingBuildingPhoto[]>('/staging/building-photos/review-queue');
+}
+
+/**
+ * Approve a building photo (peer review)
+ */
+export async function approveBuildingPhotoReview(id: string): Promise<{
+  status: string;
+  review_count: number;
+  approved: boolean;
+}> {
+  return fetchAPI(`/staging/building-photos/${id}/review-approve`, {
+    method: 'POST',
+  });
+}
+
+/**
+ * Reject a building photo
+ */
+export async function rejectBuildingPhoto(
+  id: string,
+  comment?: string
+): Promise<{ status: string }> {
+  return fetchAPI<{ status: string }>(`/staging/building-photos/${id}/review-reject`, {
+    method: 'POST',
+    body: JSON.stringify({ comment }),
+  });
+}
+
+/**
+ * Admin approve a building photo (skip peer review)
+ */
+export async function adminApproveBuildingPhoto(id: string): Promise<{
+  status: string;
+  approved: boolean;
+}> {
+  return fetchAPI(`/staging/building-photos/${id}/approve`, {
+    method: 'POST',
+  });
+}

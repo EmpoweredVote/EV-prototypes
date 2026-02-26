@@ -25,6 +25,16 @@ function ModeSelector() {
           <h2>Review Politicians</h2>
           <p>Vet politician entries from other volunteers</p>
         </Link>
+        <Link to="/buildings" className="mode-card">
+          <div className="mode-icon">&#127963;</div>
+          <h2>Building Photos</h2>
+          <p>Add government building photos for local jurisdictions</p>
+        </Link>
+        <Link to="/buildings/review" className="mode-card">
+          <div className="mode-icon">&#128444;</div>
+          <h2>Review Building Photos</h2>
+          <p>Vet building photos submitted by other volunteers</p>
+        </Link>
       </div>
     </div>
   )

@@ -14,6 +14,9 @@ import PoliticianReviewForm from './components/ReviewMode/PoliticianReviewForm'
 import PoliticianList from './components/ManageMode/PoliticianList'
 import AddPoliticianForm from './components/ManageMode/AddPoliticianForm'
 import PoliticianDetailManage from './components/ManageMode/PoliticianDetailManage'
+import BuildingsGaps from './components/BuildingsMode/BuildingsGaps'
+import BuildingPhotoForm from './components/BuildingsMode/BuildingPhotoForm'
+import BuildingPhotoReview from './components/BuildingsMode/BuildingPhotoReview'
 
 function App() {
   const { user, loading } = useAuth()
@@ -43,6 +46,9 @@ function App() {
           <Route path="/manage/:politicianId" element={<PoliticianDetailManage />} />
           <Route path="/review/politicians" element={<PoliticianReviewQueue />} />
           <Route path="/review/politician/:politicianId" element={<PoliticianReviewForm />} />
+          <Route path="/buildings" element={<BuildingsGaps />} />
+          <Route path="/buildings/add" element={<BuildingPhotoForm />} />
+          <Route path="/buildings/review" element={<BuildingPhotoReview />} />
         </Routes>
       </main>
     </div>
