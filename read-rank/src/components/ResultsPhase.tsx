@@ -2,8 +2,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useReadRankStore } from '../store/useReadRankStore';
-import type { Quote } from '../store/useReadRankStore';
-import { mockCandidates } from '../data/mockData';
+import type { Quote, Candidate } from '../store/useReadRankStore';
+import { fetchQuotesData } from '../data/api';
 
 // Display-only badge icons (non-interactive versions)
 const DiamondBadgeDisplay: React.FC<{ size?: number }> = ({ size = 28 }) => (
@@ -55,11 +55,12 @@ interface QuoteResultCardProps {
   quote: Quote;
   badge: 'diamond' | 'gold' | 'agreed' | 'disagreed';
   index: number;
+  candidates: Candidate[];
   onViewAlignment: (candidateId: string) => void;
 }
 
-const QuoteResultCard: React.FC<QuoteResultCardProps> = ({ quote, badge, index, onViewAlignment }) => {
-  const candidate = mockCandidates.find(c => c.id === quote.candidateId);
+const QuoteResultCard: React.FC<QuoteResultCardProps> = ({ quote, badge, index, candidates, onViewAlignment }) => {
+  const candidate = candidates.find(c => c.id === quote.candidateId);
 
   if (!candidate) return null;
 
@@ -185,11 +186,15 @@ export const ResultsPhase: React.FC = () => {
   const navigate = useNavigate();
   const { rankedQuotes, agreedQuotes, disagreedQuotes, badgeAssignments, goToHub } = useReadRankStore();
   const [loading, setLoading] = useState(true);
+  const [candidates, setCandidates] = useState<Candidate[]>([]);
 
   useEffect(() => {
-    // Simulate brief loading for animation
-    const timer = setTimeout(() => setLoading(false), 800);
-    return () => clearTimeout(timer);
+    fetchQuotesData().then(data => {
+      setCandidates(data.candidates);
+      // Brief delay for animation
+      const timer = setTimeout(() => setLoading(false), 800);
+      return () => clearTimeout(timer);
+    });
   }, []);
 
   // Organize quotes by badge priority: diamond, gold, other agreed, disagreed
@@ -313,6 +318,7 @@ export const ResultsPhase: React.FC = () => {
             quote={quote}
             badge={badge}
             index={index}
+            candidates={candidates}
             onViewAlignment={handleViewAlignment}
           />
         ))}

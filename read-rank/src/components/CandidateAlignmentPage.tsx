@@ -1,9 +1,9 @@
-import React, { useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useReadRankStore } from '../store/useReadRankStore';
-import type { Quote, IssueData } from '../store/useReadRankStore';
-import { mockCandidates, mockQuotes, allIssues } from '../data/mockData';
+import type { Quote, IssueData, Candidate } from '../store/useReadRankStore';
+import { fetchQuotesData } from '../data/api';
 
 // Display-only badge icons
 const DiamondBadgeDisplay: React.FC<{ size?: number }> = ({ size = 32 }) => (
@@ -137,13 +137,24 @@ export const CandidateAlignmentPage: React.FC = () => {
   const { candidateId } = useParams<{ candidateId: string }>();
   const navigate = useNavigate();
   const { issueProgress } = useReadRankStore();
+  const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [quotes, setQuotes] = useState<Quote[]>([]);
+  const [issues, setIssues] = useState<IssueData[]>([]);
 
-  const candidate = mockCandidates.find(c => c.id === candidateId);
+  useEffect(() => {
+    fetchQuotesData().then(data => {
+      setCandidates(data.candidates);
+      setQuotes(data.quotes);
+      setIssues(data.issues);
+    });
+  }, []);
+
+  const candidate = candidates.find(c => c.id === candidateId);
 
   // Group candidate's quotes by issue and determine their status
   const quotesByIssue = useMemo(() => {
     // Get all quotes for this candidate
-    const candidateQuotes = mockQuotes.filter(q => q.candidateId === candidateId);
+    const candidateQuotes = quotes.filter(q => q.candidateId === candidateId);
 
     // Group by issue
     const grouped: Record<string, {
@@ -153,7 +164,7 @@ export const CandidateAlignmentPage: React.FC = () => {
       quotes: { quote: Quote; badge: 'diamond' | 'gold' | 'agreed' | 'disagreed' | 'unevaluated' }[];
     }> = {};
 
-    allIssues.forEach((issue: IssueData) => {
+    issues.forEach((issue: IssueData) => {
       const issueQuotes = candidateQuotes.filter(q => q.issue === issue.id);
       const progress = issueProgress[issue.id];
 
@@ -192,7 +203,7 @@ export const CandidateAlignmentPage: React.FC = () => {
     });
 
     return grouped;
-  }, [candidateId, issueProgress]);
+  }, [candidateId, issueProgress, quotes, issues]);
 
   // Calculate aggregate stats across all issues
   const aggregateStats = useMemo(() => {
@@ -284,7 +295,7 @@ export const CandidateAlignmentPage: React.FC = () => {
             <h2 className="font-manrope font-semibold text-lg text-gray-800 mb-4 text-center">
               Your Alignment with {candidate.name.split(' ')[0]}
               <span className="block text-sm font-normal text-gray-500 mt-1">
-                Across {aggregateStats.completedIssues} of {allIssues.length} issues evaluated
+                Across {aggregateStats.completedIssues} of {issues.length} issues evaluated
               </span>
             </h2>
             <div className="grid grid-cols-4 gap-4">

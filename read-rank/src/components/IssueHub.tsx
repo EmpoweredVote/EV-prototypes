@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useReadRankStore } from '../store/useReadRankStore';
-import { allIssues, mockQuotes } from '../data/mockData';
+import type { IssueData, Quote } from '../store/useReadRankStore';
+import { fetchQuotesData, getQuotesForIssue } from '../data/api';
 import { shuffleArray } from '../utils/matchingAlgorithm';
 
 const getIssueIcon = (issueId: string) => {
@@ -70,13 +71,24 @@ const getProgressInfo = (
 
 export const IssueHub: React.FC = () => {
   const { issueProgress, selectIssue } = useReadRankStore();
+  const [issues, setIssues] = useState<IssueData[]>([]);
+  const [quotes, setQuotes] = useState<Quote[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchQuotesData().then(data => {
+      setIssues(data.issues);
+      setQuotes(data.quotes);
+      setLoading(false);
+    });
+  }, []);
 
   const handleSelectIssue = (issueId: string) => {
-    const issue = allIssues.find(i => i.id === issueId);
+    const issue = issues.find(i => i.id === issueId);
     if (!issue) return;
 
     // Get quotes for this issue and shuffle them
-    const issueQuotes = mockQuotes.filter(q => q.issue === issueId);
+    const issueQuotes = getQuotesForIssue(quotes, issueId);
     const shuffledQuotes = shuffleArray(issueQuotes);
 
     selectIssue(issueId, shuffledQuotes, issue);
@@ -84,7 +96,15 @@ export const IssueHub: React.FC = () => {
 
   // Count completed issues
   const completedCount = Object.values(issueProgress).filter(p => p.completed).length;
-  const totalIssues = allIssues.length;
+  const totalIssues = issues.length;
+
+  if (loading) {
+    return (
+      <div className="text-center py-12">
+        <p className="ev-text-primary text-base md:text-lg">Loading issues...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 md:space-y-8 pb-8">
@@ -126,7 +146,7 @@ export const IssueHub: React.FC = () => {
 
       {/* Issue Cards */}
       <div className="max-w-2xl mx-auto space-y-4">
-        {allIssues.map((issue, index) => {
+        {issues.map((issue, index) => {
           const progress = issueProgress[issue.id];
           const progressInfo = getProgressInfo(issue.id, progress);
 
