@@ -19,23 +19,8 @@
   status = 200
 
 [[redirects]]
-  from = "/treasury-tracker/*"
-  to = "/treasury-tracker/dist/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/empowered-badges/*"
-  to = "/empowered-badges/dist/index.html"
-  status = 200
-
-[[redirects]]
   from = "/data-entry/*"
   to = "/data-entry/dist/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/fallacy-finders/*"
-  to = "/fallacy-finders/dist/index.html"
   status = 200
 
 # Set correct MIME types for JavaScript files
