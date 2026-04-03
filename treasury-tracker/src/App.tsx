@@ -256,7 +256,10 @@ function App() {
   };
 
   const filteredCategories = filterCategories(currentCategories, searchQuery);
-  const displayCategories = searchQuery ? filteredCategories : currentCategories;
+  const isPastYear = parseInt(selectedYear) < new Date().getFullYear();
+  const displayCategories = (searchQuery ? filteredCategories : currentCategories).filter(c =>
+    isPastYear ? (c.actualAmount ?? c.amount) !== 0 : c.amount !== 0
+  );
 
   return (
     <div className="app">
@@ -455,6 +458,7 @@ function App() {
               <CategoryList
                 categories={displayCategories}
                 onCategoryClick={handleCategoryClick}
+                isPastYear={isPastYear}
               />
 
               {/* Show linked transactions summary for intermediate budget categories */}

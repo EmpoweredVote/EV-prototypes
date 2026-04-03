@@ -46,6 +46,7 @@ export interface LinkedTransactionSummary {
 export interface BudgetCategory {
   name: string;
   amount: number;
+  actualAmount?: number;
   percentage: number;
   color: string;
   subcategories?: BudgetCategory[];

@@ -24,6 +24,7 @@ import {
 interface CategoryListProps {
   categories: BudgetCategory[];
   onCategoryClick: (category: BudgetCategory) => void;
+  isPastYear?: boolean;
 }
 
 // Icon mapping for budget categories
@@ -71,7 +72,7 @@ const getCategoryIcon = (categoryName: string): React.ElementType => {
   return Building2;
 };
 
-const CategoryList: React.FC<CategoryListProps> = ({ categories, onCategoryClick }) => {
+const CategoryList: React.FC<CategoryListProps> = ({ categories, onCategoryClick, isPastYear = false }) => {
   const formatCurrency = (amount: number) => {
     if (amount >= 1000000) {
       return `$${(amount / 1000000).toFixed(1)}M`;
@@ -124,7 +125,7 @@ const CategoryList: React.FC<CategoryListProps> = ({ categories, onCategoryClick
               <div className="category-info">
                 <div className="category-name">{category.name}</div>
                 <div className="category-stats">
-                  <span className="category-amount">{formatCurrency(category.amount)}</span>
+                  <span className="category-amount">{formatCurrency(isPastYear && category.actualAmount != null ? category.actualAmount : category.amount)}</span>
                   <span className="category-separator">•</span>
                   <span className="category-percentage">{formatPercentage(category.percentage)}%</span>
                 </div>
