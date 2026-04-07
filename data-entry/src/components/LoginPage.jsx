@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
-import { AuthForm } from '@chrisandrewsedu/ev-ui'
+import { AuthForm } from '@empoweredvote/ev-ui'
 
 function LoginPage() {
   const [mode, setMode] = useState('login')
