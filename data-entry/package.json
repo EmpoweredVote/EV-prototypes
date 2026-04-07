@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@empoweredvote/ev-ui": "^0.1.68",
+    "@empoweredvote/ev-ui": "^0.2.0",
     "@react-spring/web": "^10.0.1",
     "@supabase/supabase-js": "^2.97.0",
     "react": "^19.0.0",
