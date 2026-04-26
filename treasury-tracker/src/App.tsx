@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from 'react'
-import { SiteHeader } from '@empoweredvote/ev-ui';
+import { SiteHeader, evContext } from '@empoweredvote/ev-ui';
 import { ArrowLeft } from 'lucide-react';
 import DatasetTabs from './components/datasets/DatasetTabs';
 import NavigationTabs from './components/NavigationTabs';
@@ -99,6 +99,55 @@ function App() {
   const [revenueData, setRevenueData] = useState<BudgetData | null>(null);
   const [loading, setLoading] = useState(true);
   const [navigationPath, setNavigationPath] = useState<BudgetCategory[]>([]);
+
+  // ev-context hydration (260426-mc5, read-only).
+  // Treasury-tracker currently hardcodes Bloomington; multi-city selection is
+  // out of scope. We still attempt to learn the current address (authed slice
+  // preferred when /account/me yields a userId, guest slice otherwise) and
+  // log it in dev so a future multi-city selector can wire it up. Treasury-
+  // tracker NEVER writes to ev-context — it is a read-only consumer per the
+  // plan constraint.
+  useEffect(() => {
+    let cancelled = false;
+    const TTL_MS = 30 * 24 * 60 * 60 * 1000;
+    const hydrate = async () => {
+      try {
+        let userId: string | null = null;
+        try {
+          const res = await fetch('https://api.empowered.vote/api/account/me', {
+            credentials: 'include',
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data && typeof data.id === 'string') userId = data.id;
+          }
+        } catch { /* logged-out or offline — fall through to guest */ }
+
+        if (cancelled) return;
+        let addr: { addr?: string; ts?: number } | null = null;
+        if (userId) {
+          const slice = await evContext.getAuthedSlice(userId);
+          const a = slice && (slice as { address?: { addr?: string; ts?: number } }).address;
+          if (a && typeof a.addr === 'string' && (!a.ts || Date.now() - a.ts <= TTL_MS)) {
+            addr = a;
+          }
+        }
+        if (!addr) {
+          const shared = await evContext.get();
+          const a = shared && (shared as { address?: { addr?: string; ts?: number } }).address;
+          if (a && typeof a.addr === 'string' && (!a.ts || Date.now() - a.ts <= TTL_MS)) {
+            addr = a;
+          }
+        }
+        if (!cancelled && addr && import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.log('[treasury-tracker] hydrated address from ev-context (multi-city selector deferred):', addr.addr);
+        }
+      } catch { /* broker offline — silent */ }
+    };
+    hydrate();
+    return () => { cancelled = true; };
+  }, []);
 
   // Load operating budget and revenue data for static info card and totals
   useEffect(() => {
